@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{F65563F8-5EE6-489D-A0CF-74943033710F}</ProjectGuid>
+    <ProjectGuid>{06A5882D-BA5A-4423-B2A9-CED058A8AFE3}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>YunaStage</RootNamespace>
+    <RootNamespace>YunaStageSim</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
