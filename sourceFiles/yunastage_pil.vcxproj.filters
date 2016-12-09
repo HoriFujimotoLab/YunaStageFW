@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\control">
+      <UniqueIdentifier>{56ce2c98-88e7-4bff-a2a7-3d3cf468aa62}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\hardware">
+      <UniqueIdentifier>{b7ee942e-5ac4-4e2c-8c6c-6a463bd82be4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\system">
+      <UniqueIdentifier>{8204c173-299c-4395-a303-a30a9367f689}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\parameters">
+      <UniqueIdentifier>{34b914e3-9b83-4561-aa45-33d6aec25081}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\references">
+      <UniqueIdentifier>{82f0d2be-e8ed-4a3d-a1eb-e741b3d67fcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\control">
+      <UniqueIdentifier>{2b2c8174-5479-4cca-88fc-b6b76b05551c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\hardware">
+      <UniqueIdentifier>{c2f0ac31-f543-42d7-b8fa-f2e751434ae8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\system">
+      <UniqueIdentifier>{2d8f68cd-5ab7-4257-a38b-f8a9a7ec8b63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\libraries">
+      <UniqueIdentifier>{78b6325d-02cb-434f-9a42-e80de564f5d8}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ctrl_current.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_design.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_math.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_motion.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="hardw_adc.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="hardw_dac.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="hardw_lin.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="hardw_pev.h">
+      <Filter>Header Files\hardware</Filter>
+    </ClInclude>
+    <ClInclude Include="system_data.h">
+      <Filter>Header Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="system_fsm.h">
+      <Filter>Header Files\system</Filter>
+    </ClInclude>
+    <ClInclude Include="data\ctrl_current_par.h">
+      <Filter>Resource Files\parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="data\ctrl_motion_par.h">
+      <Filter>Resource Files\parameters</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_traject.h">
+      <Filter>Header Files\control</Filter>
+    </ClInclude>
+    <ClInclude Include="c67x_dsplib.h">
+      <Filter>Resource Files\libraries</Filter>
+    </ClInclude>
+    <ClInclude Include="c67x_fastmath.h">
+      <Filter>Resource Files\libraries</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ctrl_current.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_design.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_math.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_motion.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+    <ClCompile Include="hardw_adc.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="hardw_dac.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="hardw_lin.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="hardw_pev.c">
+      <Filter>Source Files\hardware</Filter>
+    </ClCompile>
+    <ClCompile Include="system_fsm.c">
+      <Filter>Source Files\system</Filter>
+    </ClCompile>
+    <ClCompile Include="main_pil.c" />
+    <ClCompile Include="ctrl_traject.c">
+      <Filter>Source Files\control</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

@@ -1,10 +1,10 @@
 [COMPONENT]
-LIB	""	# Create:Wed Jun 08 17:40:28 2016
-OBJ	""	# Create:Wed Jun 08 17:40:28 2016
-HEADER	""	# Create:Wed Jun 08 17:40:28 2016
-SRC	"main_pil.c"	# Create:Wed Jun 08 17:40:28 2016
+LIB	"c67x_dsplib.lib" "c67x_fastmath.lib"	# "c67x_fastmath.lib" "dsplib.lib":Thu Sep 15 10:31:38 2016
+OBJ	""	# Create:Sun Aug 28 23:08:40 2016
+HEADER	""	# Create:Sun Aug 28 23:08:40 2016
+SRC	"ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_dac.c" "hardw_lin.c" "hardw_pev.c" "main_pil.c" "system_fsm.c"	# "cblas_dgemv.c" "ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_dac.c" "hardw_lin.c" "hardw_pev.c" "main_pil.c" "system_fsm.c":Mon Sep 12 17:40:20 2016
 [CONFIGURE]
-PEOS_VER	"1_16"	# Create:Wed Jun 08 17:40:28 2016
-PROTECT	"OFF"	# Create:Wed Jun 08 17:40:28 2016
-STOP_RECONF	"OFF"	# Create:Wed Jun 08 17:40:28 2016
-TARGET_TYPE	"EXP3C6713"	# Create:Wed Jun 08 17:40:28 2016
+PEOS_VER	"1_17"	# Create:Sun Aug 28 23:08:40 2016
+PROTECT	"OFF"	# Create:Sun Aug 28 23:08:40 2016
+STOP_RECONF	"OFF"	# Create:Sun Aug 28 23:08:40 2016
+TARGET_TYPE	"EXP3C6713"	# Create:Sun Aug 28 23:08:40 2016

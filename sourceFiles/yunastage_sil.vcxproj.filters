@@ -1,0 +1,81 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{c6a6001a-f745-427e-8890-0c02d3b5b0a5}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ctrl_current.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_design.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_math.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_motion.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_plant.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="data\ctrl_current_par.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="data\ctrl_motion_par.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="data\ctrl_plant_par.h">
+      <Filter>Resource Files</Filter>
+    </ClInclude>
+    <ClInclude Include="system_data.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ctrl_traject.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c67x_dsplib.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="c67x_fastmath.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ctrl_current.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_design.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_math.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_motion.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ctrl_plant.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="main_sil.c" />
+    <ClCompile Include="ctrl_traject.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c67x_dsplib.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="c67x_fastmath.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>

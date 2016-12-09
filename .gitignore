@@ -1,4 +1,8 @@
-### MyWay Specific
+### Yunastage Specific
+*.mat
+*.csv
+
+### MyWay
 *.cnd
 *.mot
 *.map

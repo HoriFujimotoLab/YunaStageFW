@@ -19,10 +19,11 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{06A5882D-BA5A-4423-B2A9-CED058A8AFE3}</ProjectGuid>
+    <ProjectGuid>{7CE5C558-5348-4D70-B4D1-1C99B3FC0A73}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>YunaStageSim</RootNamespace>
+    <RootNamespace>yunastage</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <ProjectName>yunastage_hil</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -142,6 +143,34 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ctrl_design.c" />
+    <ClCompile Include="ctrl_math.c" />
+    <ClCompile Include="ctrl_current.c" />
+    <ClCompile Include="ctrl_traject.c" />
+    <ClCompile Include="ctrl_motion.c" />
+    <ClCompile Include="hardw_adc.c" />
+    <ClCompile Include="hardw_pev.c" />
+    <ClCompile Include="hardw_dac.c" />
+    <ClCompile Include="hardw_lin.c" />
+    <ClCompile Include="main_hil.c" />
+    <ClCompile Include="system_fsm.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="c67x_dsplib.h" />
+    <ClInclude Include="c67x_fastmath.h" />
+    <ClInclude Include="ctrl_design.h" />
+    <ClInclude Include="ctrl_math.h" />
+    <ClInclude Include="ctrl_current.h" />
+    <ClInclude Include="ctrl_traject.h" />
+    <ClInclude Include="data\ctrl_current_par.h" />
+    <ClInclude Include="data\ctrl_motion_par.h" />
+    <ClInclude Include="ctrl_motion.h" />
+    <ClInclude Include="hardw_dac.h" />
+    <ClInclude Include="hardw_pev.h" />
+    <ClInclude Include="hardw_adc.h" />
+    <ClInclude Include="hardw_lin.h" />
+    <ClInclude Include="system_data.h" />
+    <ClInclude Include="system_fsm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
