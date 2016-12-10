@@ -1,23 +1,32 @@
 /************************************************************************************
-STAGE SENSOR ADC MODULE
------------------------
+SENSOR ADC MODULE
+-----------------
 Descr.:		Hardware module adc of stage sensors
 Boards:		MWPE3-C6713A, MWPE3-ADC (14 bit)
-Sensor:		hioki,kyowa,keyence: Yuna ball-screw Setup
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Sensor:		hioki,kyowa,keyence: Yuna ball-screw setup
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
+#ifndef	HARDW_ADC_H
+#define	HARDW_ADC_H
 
-#ifndef	STAGE_ADC_H
-#define	STAGE_ADC_H
+//	GLOBAL VAR
+// inverter measured values
+extern float vu_ad, vw_ad, iu_ad, iw_ad;
+extern float va_ad, vb_ad, ia_ad, ib_ad;
+extern float vd_ad, vq_ad, id_ad, iq_ad;
+extern float vdc_ad, idc_ad;
+// sensor level
+extern float disp_s1, disp_s2, disp_m1, disp_m2;
+extern float load_m, load_s, servo_ad, temp_s;
+extern float acc_mx, acc_tx, acc_tz, acc_sx;
 
-#include	"system_data.h"
 
 /*	INIT CONVERSION & BOARD
 **	-----------------------
 **	DES:	initiate adc board & calculate offsets
 **			necessary at program init before reading
 */
-void stage_adc_init(void);
+void hardw_adc_init(void);
 
 
 /*	READ SENSOR ADC DATA
@@ -28,7 +37,7 @@ void stage_adc_init(void);
 **			ad2: grp0: ec3 [mm] {0,1}, grp1: ex1 [A] {0,25}, grp2: tp2 [V] {0,5}
 **			ad3: grp0: ec4 [mm] {0,1}, grp1: ex2 [A] {0,25}, grp2: tp3 [V] {0,5}
 */
-void stage_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3);
+void hardw_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3);
 
 
 #endif

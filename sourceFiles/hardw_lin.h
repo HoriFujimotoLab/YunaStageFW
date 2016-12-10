@@ -1,33 +1,42 @@
 /************************************************************************************
-STAGE LINEAR-SCALE MODULE
--------------------------
+LINEAR-SCALE MODULE
+-------------------
 Descr.:		Hardware module for linear-scale of table
 Boards:		MWPE-Expert3, MWPE-FPGAA (custom board)
 Sensor:		1nm incremental linear scale (magnescale)
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
 
-#ifndef	STAGE_LIN_H
-#define	STAGE_LIN_H
+#ifndef	HARDW_LIN_H
+#define	HARDW_LIN_H
 
-#include	"system_data.h"
+/*	GLOBAL VARIABLES
+**	----------------
+**	DES:	table-side linear scale
+*/
+extern int pos_t_nano, vel_t_nano, error_in;
+extern float pos_t, vel_t;
+
 
 /*	INIT ENCODER & BOARD
 **	--------------------
 **	DES:	initiate fpga board and encoder by register set/clear
 **			necessary at program init before encoder reading
 */
-void stage_lin_init(void);
+void hardw_lin_init(void);
 
 
 /*	READ LINEAR-SCALE DATA
 **	-----------------------
 **	DES:	returns the processed incremental data from linear scale
+**			lower 32 bit data in [nm]
+**			32bit int: -2^31 < int < 2^31
+**			2^31 = 2.147483647*1e9 [nm]
 **	OUT:	pos_t:	linear table position	[mm]
 **			vel_t:	linear table velocity	[mm/s]
 **			vel_ta:	averaged velocity (lpf)	[mm/s]
 */
-void stage_lin_read(float *pos_t, float *vel_t, float *vel_ta);
+void hardw_lin_read(float *pos_t, float *vel_t, float *vel_ta);
 
 
 /*	READ LINEAR-SCALE STATUS
@@ -35,7 +44,7 @@ void stage_lin_read(float *pos_t, float *vel_t, float *vel_ta);
 **	DES:	returns the status of the sensor data acquisition
 **	OUT:	status:	sensor error status [-] {ERR = 1}
 */
-void stage_lin_status(int *status);
+void hardw_lin_status(int *status);
 
 
 /*	READ LINEAR-SCALE STATUS
@@ -43,7 +52,7 @@ void stage_lin_status(int *status);
 **	DES:	returns the data count registers to 0
 **			necessary at stage home referencing 
 */
-void stage_lin_reset(void);
+void hardw_lin_reset(void);
 
 
 #endif

@@ -4,11 +4,10 @@ MOTOR ROTARY-ENCODER MODULE
 Descr.:		Hardware module for motor encoder (00672)
 Boards:		MWPE-Expert3, MWPE-PIOS (PIO expansion board)
 Sensor:		20bit absolute rotary encoder (Tamagawa)
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
-
-#include "motor_enc.h"
-#include <math.h>
+#include "hardw_menc.h"
+#include "system_data.h" 
 #include <mwio3.h>
 
 // MODULE PAR
@@ -21,10 +20,14 @@ Author:		Thomas Beauduin, University of Tokyo, April 2015
 #define ALPHA			(0.05)						// recursive IIR MAF factor
 
 // MODULE VAR
+// global
+float theta_m, theta_e, omega_m;
+int theta_m_nano, omega_m_nano;
+// local
 static int nrofr = 0;								// number of turns [-]
 static double theta_msr;							// measured theta  [rad]
 
-void motor_enc_init()
+void hardw_menc_init()
 {
 	pios_pio_set_bit(PIOS_BDN, 0);											// bit0 DS40
 	pios_pio_clr_bit(PIOS_BDN, 1);											// bit1 INRQ
@@ -35,7 +38,7 @@ void motor_enc_init()
 }
 
 
-void motor_enc_elec(float *theta_e)
+void hardw_menc_elec(float *theta_e)	//int *theta_nano
 {
 	// LOCAL VAR
 	unsigned int data_msr;													// measured data   [cnt]
@@ -45,6 +48,7 @@ void motor_enc_elec(float *theta_e)
 	(*(volatile int*)(RST_ADDR + ((PIOS_BDN) << 14))); wait(3);				// reset flag
 	pios_pio_clr_bit(PIOS_BDN, 4);											// bit4 RQSTB
 	data_msr = (*(volatile int*)(DAT_ADDR + ((PIOS_BDN) << 14)) & 0x000FFFFF);
+	*theta_nano = (int)data_msr;
 	theta_msr = (double)data_msr / ENC_RES * PI(2) * ENC_DIR;				// [cnt] to [rad]
 
 	// ELEC
@@ -54,7 +58,7 @@ void motor_enc_elec(float *theta_e)
 }
 
 
-void motor_enc_read(float *theta_m, float *omega_m, float *omega_ma)
+void hardw_menc_read(float *theta_m, float *omega_m)
 {
 	// LOCAL VAR
 	double diff = 0.0;														// position diff   [rad]
@@ -68,18 +72,18 @@ void motor_enc_read(float *theta_m, float *omega_m, float *omega_ma)
 	*omega_m = (float)((diff + i*PI(2)) * FS);								// full screw vel calc
 
 	// FILT
-	*omega_ma = ALPHA * *omega_m + (1.0 - ALPHA) * *omega_ma;				// resursive iir maf
+	//*omega_ma = ALPHA * *omega_m + (1.0 - ALPHA) * *omega_ma;				// resursive iir maf
 }
 
 
-void motor_enc_reset(float *theta_m)
+void hardw_menc_reset(float *theta_m)
 {
 	*theta_m = *theta_m - nrofr * PI(2);									// remove rev from data
 	nrofr = 0;																// reset number of rev
 }
 
 
-void motor_enc_status(unsigned int *status)
+void hardw_menc_status(unsigned int *status)
 {
 	*status = (((*(volatile int*)(DAT_ADDR + ((PIOS_BDN) << 14))) & 0x80000000) >> 31);
 }

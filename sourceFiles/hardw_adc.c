@@ -28,13 +28,22 @@ Author:		Thomas Beauduin, University of Tokyo, April 2015
 #define		R_AP	(500.501)			// AccPitch A32sn36789y	[m/s2] (9.99mV/m/s^2)
 
 // ADC OFFSETS (see notes)
-#define		O_VDC	(-2.7155)			// ch2 adc offset: vdc
-#define		O_LC1	(-0.8418)			// ch5 adc offset: load-cell
-#define		O_LC2	(-155.56)			// ch6 adc offset: load-cell
+#define		O_VDC	(0.0)			// ch2 adc offset: vdc
+#define		O_LC1	(0.0)			// ch5 adc offset: load-cell
+#define		O_LC2	(0.0)			// ch6 adc offset: load-cell
 
 // MODULE VAR
+// inverter
+float vu_ad, vw_ad, iu_ad, iw_ad;
+float va_ad, vb_ad, ia_ad, ib_ad;
+float vd_ad, vq_ad, id_ad, iq_ad;
+float vdc_ad, idc_ad;
+// sensor level
+float disp_s1, disp_s2, disp_m1, disp_m2;
+float load_m, load_s, servo_ad, temp_s;
+float acc_mx, acc_tx, acc_tz, acc_sx;
+// local
 float ad_avg[12] = { 0.0 };				// MW-ADC average offsets
-
 
 void stage_adc_init(void)
 {

@@ -4,20 +4,22 @@ STAGE ROTARY-ENCODER MODULE
 Descr.:		Hardware module for load-side encoder
 Boards:		MWPE-Expert3, MWPE-FPGAA (custom board)
 Sensor:		20bit absolute rotary encoder (nikon)
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
+#ifndef	HARDW_SENC_H
+#define	HARDW_SENC_H
 
-#ifndef	STAGE_ENC_H
-#define	STAGE_ENC_H
+// MODULE VAR
+extern float theta_m, theta_e, omega_m;
+extern int theta_m_nano, omega_m_nano;
 
-#include	"system_data.h"
 
 /*	INIT ENCODER & BOARD
 **	--------------------
 **	DES:	initiate fpga board and encoder by register set/clear
 **			necessary at program init before encoder reading
 */
-void stage_enc_init(void);
+void hardw_senc_init(void);
 
 
 /*	READ STAGE ENCODER DATA
@@ -26,7 +28,7 @@ void stage_enc_init(void);
 **	OUT:	theta_s:	theta mechanic for position control		[rad]	{-LR/2, LR/2}
 **			omega_s:	omega mechanic for decoupling control	[rad/s] {-2pi*fs, 2pi*fs}
 */
-void stage_enc_read(float *theta_s, float *omega_s, float *omega_sa);
+void hardw_senc_read(float *theta_s, float *omega_s);
 
 
 /*	RESET STAGE ENCODER MODULE
@@ -34,7 +36,7 @@ void stage_enc_read(float *theta_s, float *omega_s, float *omega_sa);
 **	DES:	resets encoder module internal counters and variables
 **			necessary at measurement init to calibrate setup encoders
 */
-void stage_enc_reset(void);
+void hardw_senc_reset(void);
 
 
 /*	CHECK ENCODER STATUS
@@ -42,6 +44,6 @@ void stage_enc_reset(void);
 **	DES:	check run/error status of stage encoder
 **	OUT:	encoder status for error handling	[-]	{RUN=0, ERROR=1}
 */
-void stage_enc_status(int *status);
+void hardw_senc_status(int *status);
 
 #endif

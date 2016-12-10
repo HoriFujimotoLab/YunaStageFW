@@ -1,14 +1,13 @@
 /************************************************************************************
-MOTOR POWER-ELEC MODULE
------------------------
+POWER-ELEC MODULE
+------------------
 Descr.:		hardware module for motor drive
 Boards:		MWPE-Expert3, MWPE-PEV (PEV expansion board)
 PWelec:		MWINV-9R122A	(9.1kVA power module)
-Author:		Thomas Beauduin, University of Tokyo, 2015
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
-
-#include "motor_pem.h"
-#include <math.h>
+#include "hardw_pev.h"
+#include "system_data.h"
 #include <mwio3.h>
 
 // MODULE PAR
@@ -26,7 +25,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 float pe_avg[8] = { 0.0 };					// MW-PEV average offsets
 
 
-void motor_adc_init(void)
+void hardw_pev_init(void)
 {
 	// LOCAL VAR
 	int i = 0, j = 0;													// loop counters
@@ -53,7 +52,7 @@ void motor_adc_init(void)
 }
 
 
-void motor_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3)
+void hardw_pev_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3)
 {
 	float adf0, adf1, adf2, adf3;
 	pev_ad_start(PEV_BDN, grp_ad);										// ADC group x conv start
@@ -70,7 +69,7 @@ void motor_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3)
 }
 
 
-void motor_inv_init(void)
+void hardw_inv_init(void)
 {
 	pev_inverter_init(PEV_BDN, INV_CH, FC, DT);							// init inv para
 	pev_inverter_set_uvw(PEV_BDN, INV_CH, 0.0, 0.0, 0.0);				// set modulation type
@@ -81,7 +80,7 @@ void motor_inv_init(void)
 }
 
 
-void motor_inv_pwm(float vu_ref, float vv_ref, float vw_ref, float vdc_ad)
+void hardw_inv_pwm(float vu_ref, float vv_ref, float vw_ref, float vdc_ad)
 {
 	float mu_ref, mv_ref, mw_ref;										// phase modulation index
 	double vdc_idx;														// dc-bus voltage index

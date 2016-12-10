@@ -4,10 +4,10 @@ STAGE ROTARY-ENCODER MODULE
 Descr.:		Hardware module for stage encoder
 Boards:		MWPE-Expert3, MWPE-FPGAA (custom board)
 Sensor:		20bit absolute rotary encoder (nikon)
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
-
-#include	"stage_enc.h"
+#include	"hardw_senc.h"
+#include	"system_data.h"
 #include	<mwio3.h>
 
 // MODULE PAR
@@ -18,10 +18,14 @@ Author:		Thomas Beauduin, University of Tokyo, April 2015
 #define ALPHA		(0.50)					// recusive iir maf factor
 
 // MODULE VAR
+// global
+float theta_m, theta_e, omega_m;
+int theta_m_nano, omega_m_nano;
+// local
 static int nrofr = 0;						// number of turns [-]
 
 
-void stage_enc_init(void)
+void hardw_senc_init(void)
 {
 	int reset = 0;															// reset counter
 	*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA04) = 0x00000000;					// set clear register
@@ -33,7 +37,7 @@ void stage_enc_init(void)
 }
 
 
-void stage_enc_read(float *theta_s, float *omega_s, float *omega_sa)
+void hardw_senc_read(float *theta_s, float *omega_s)
 {
 	// LOCAL VAR
 	int data_ms = 0;														// measured data  [cnt]
@@ -44,7 +48,7 @@ void stage_enc_read(float *theta_s, float *omega_s, float *omega_sa)
 	// READ DATA
 	*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA00) = 0xC0000F00;					// send read bit
 	data_ms = (*(FPGA_addr + ((FPGA_BDN) << 12) + 0x804) & 0xFFFFF);		// read register
-	theta_ms = ((double)data_ms / ENC_RES * PI(2) * ENC_DIR) - ENC_OFF;	// [cnt] to [rad]
+	theta_ms = ((double)data_ms / ENC_RES * PI(2) * ENC_DIR) - ENC_OFF;		// [cnt] to [rad]
 
 	// ANGLE
 	diff = theta_ms - (*theta_s - nrofr * PI(2));							// theta time difference
@@ -52,17 +56,17 @@ void stage_enc_read(float *theta_s, float *omega_s, float *omega_sa)
 	if (diff < -PI(1)){ nrofr++; i++; }										// note: max vel pi*fs
 	*theta_s = theta_ms + nrofr * PI(2);									// full screw pos [rad]
 	*omega_s = (diff + i*PI(2)) * FS;										// full screw vel [rad/s]
-	*omega_sa = ALPHA * *omega_s + (1 - ALPHA) * *omega_sa;					// resursive maf  [rad/s]
+	//*omega_sa = ALPHA * *omega_s + (1 - ALPHA) * *omega_sa;				// resursive maf  [rad/s]
 }
 
 
-void stage_enc_reset(void)
+void hardw_senc_reset(void)
 {
 	nrofr = 0;																// set start position
 }
 
 
-void stage_enc_status(int *status)
+void hardw_senc_status(int *status)
 {
 	*status = ((*(FPGA_addr + ((FPGA_BDN) << 12) + 0x808) >> 20) & 0xFF);	// read error status
 }

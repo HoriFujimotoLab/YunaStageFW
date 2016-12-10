@@ -1,13 +1,14 @@
 /************************************************************************************
-STAGE LINEAR-SCALE MODULE
--------------------------
+LINEAR-SCALE MODULE
+-------------------
 Descr.:		Hardware module for linear-scale of table
 Boards:		MWPE-Expert3, MWPE-FPGAA (custom board: 08934-C2-xxx)
 Sensor:		1nm incremental linear scale (magnescale)
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
 
-#include	"stage_lin.h"
+#include	"hardw_lin.h"
+#include	"system_data.h"
 #include	<mwio3.h>
 
 // MODULE PAR
@@ -24,10 +25,14 @@ Author:		Thomas Beauduin, University of Tokyo, April 2015
 #define	STA_ADDR	((volatile unsigned int*)0xA0024024)		// status address	(R bit6..0:busy, bit7:err)
 
 // MODULE VAR
+// Global:
+int pos_t_nano = 0, vel_t_nano = 0, error_in = 0;
+float pos_t = 0, vel_t = 0;
+// Local:
 int read_err = 0, hard_err = 0;
 
 
-void stage_lin_init(void)
+void hardw_lin_init(void)
 {
 	*RST_ADDR = 0; *RST_ADDR = 1;								// reset registers
 	*RST_ADDR = 1; *RST_ADDR = 0;								// reset hardware  
@@ -35,31 +40,28 @@ void stage_lin_init(void)
 }
 
 
-void stage_lin_read(int *pos_nano, float *pos,  int vel_nano, float *vel)
+void hardw_lin_read(int *pos_nano, float *pos,  int *vel_nano, float *vel)
 {
 	// LOCAL VAR
-	int data_cnt = 0;											// msr counter [cnt]
-	int i = 0;													// loop index  [-]
-	float temp = 0;												// temp data buffer
+	int i = 0;						// loop index [-]
+	int pos_nano_temp;				// previous [m]
+	pos_nano_temp = *pos_nano;
 
 	// READ DATA
 	*CON_ADDR = 1;												// conversion start
 	while (((*STA_ADDR & 0x02) == 1) && (i <= 5)) { i++; }		// wait for rdy status
 	if (i >= 5) { read_err = 1; }								// over-time error
-	data_cnt = *DAT_ADDR;										// read data register
+	*pos_nano = *DAT_ADDR;										// read data register
 
 	// POS & VEL
-	temp = *pos_t;												// previous msr   [mm]
-	*pos_t = LIN_DIR * data_cnt * 1.0e-6;						// table position [mm]
-	*vel_t = (*pos_t - temp) * FS;								// table velocity [mm/s]
-	*vel_ta = ALPHA * *vel_t + (1 - ALPHA) * *vel_ta;			// resursive maf  [mm/s]
-
-	// NANO
-
+	*vel_nano = (*pos_nano - pos_nano_temp) * FC;
+	*pos = (float)*pos_nano * 1.0e-9;							// table position [m]
+	*vel = (float)*vel_nano * 1.0e-9;							// table velocity [m/s]
+	//*vel_a = ALPHA * *vel + (1 - ALPHA) * *vel_a;		// resursive maf  [m/s]
 }
 
 
-void stage_lin_status(int *status)
+void hardw_lin_status(int *status)
 {
 	hard_err = *ERR_ADDR;										// hardware error
 	if (read_err == 1 || hard_err == 1) { *status = 1; }		// fpga read error
@@ -67,7 +69,7 @@ void stage_lin_status(int *status)
 }
 
 
-void stage_lin_reset(void)
+void hardw_lin_reset(void)
 {
 	*CLR_ADDR = 0x04;											// set data_addr to 0
 }

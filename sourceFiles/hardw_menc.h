@@ -4,20 +4,22 @@ MOTOR ROTARY-ENCODER MODULE
 Descr.:		Hardware module for motor encoder (00672)
 Boards:		MWPE-Expert3, MWPE-PIOS (PIO expansion board)
 Sensor:		20bit absolute rotary encoder (Tamagawa)
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
+#ifndef	HARDW_MENC_H
+#define	HARDW_MENC_H
 
-#ifndef	MOTOR_ENC_H
-#define	MOTOR_ENC_H
+// MODULE VAR
+extern float theta_m, theta_e, omega_m;
+extern int theta_m_nano, omega_m_nano;
 
-#include "system_data.h"
 
 /*	INIT ENCODER & BOARD
 **	--------------------
 **	DES:	initiate pios board and encoder by register set/clear
 **			necessary at program init before encoder reading
 */
-void motor_enc_init();
+void hardw_menc_init();
 
 
 /*	READ MOTOR ENCODER DATA
@@ -29,8 +31,8 @@ void motor_enc_init();
 **			omega_ma:	omega averaged (time) for vel control	[rad/s]	{-2pi*fs, 2pi*fs}
 **	DSP:	calctime:	avgerage calclation time				8 [ms]  (vers. 29/11/15)
 */
-void motor_enc_elec(float *theta_e);
-void motor_enc_read(float *theta_m, float *omega_m, float *omega_ma);
+void hardw_menc_elec(float *theta_e);
+void hardw_menc_read(float *theta_m, float *omega_m);
 
 
 /*	RESET ENCODER MODULE
@@ -38,7 +40,7 @@ void motor_enc_read(float *theta_m, float *omega_m, float *omega_ma);
 **	DES:	resets encoder module internal counters and variables
 **			necessary at measurement init to calibrate setup encoders
 */
-void motor_enc_reset(float *theta_m);
+void hardw_menc_reset(float *theta_m);
 
 
 /*	CHECK ENCODER STATUS
@@ -46,7 +48,7 @@ void motor_enc_reset(float *theta_m);
 **	DES:	check run/error status of motor encoder
 **	OUT:	encoder status for error handling	[-]	{RUN=1, ERROR=0}
 */
-void motor_enc_status(unsigned int *status);
+void hardw_menc_status(unsigned int *status);
 
 
 #endif
