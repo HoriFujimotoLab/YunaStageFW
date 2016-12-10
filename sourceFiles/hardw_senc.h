@@ -10,7 +10,7 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #define	HARDW_SENC_H
 
 // MODULE VAR
-extern float theta_s, theta_e, omega_s;
+extern float theta_s, omega_s;
 extern int theta_s_nano, omega_s_nano;
 
 

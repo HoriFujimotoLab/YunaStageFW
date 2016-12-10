@@ -36,7 +36,7 @@ void hardw_lin_init(void);
 **			vel_t:	linear table velocity	[mm/s]
 **			vel_ta:	averaged velocity (lpf)	[mm/s]
 */
-void hardw_lin_read(float *pos_t, float *vel_t, float *vel_ta);
+void hardw_lin_read(int *pos_nano, float *pos, int *vel_nano, float *vel);
 
 
 /*	READ LINEAR-SCALE STATUS

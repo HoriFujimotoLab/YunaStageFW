@@ -9,7 +9,7 @@ Author:		Thomas Beauduin, Wataru Ohnishi
 #include "ctrl_motion.h"
 #include "ctrl_math.h"
 #include "system_data.h"
-#include "data/Lm_i_0o300_1600um/ctrl_motion_par.h"
+#include "data/ctrl_motion_par.h"
 
 
 // MODULE VAR
@@ -18,8 +18,6 @@ float pos_err = 0.0;
 float yd = 0.0, time_ff = 0.0;
 int yd_nano = 0, pos_ref_nano = 0;
 float Kff = 1.0;
-// Global: feedforward selector
-enum ff fftype_e = ZMETC;
 
 
 void ctrl_motion_lpf1(float pos_ref_org, float *pos_ref_sh)

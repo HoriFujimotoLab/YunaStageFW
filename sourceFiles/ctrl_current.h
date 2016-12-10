@@ -10,13 +10,10 @@ Author:		Thomas Beauduin, Wataru Ohnishi
 #define	CTRL_CURRENT_H
 
 // MODULE PAR
-// Global: main+sub inverter control values
-extern float	vd0_ref, vq0_ref, id0_ref, iq0_ref;
-extern float	va0_ref, vb0_ref, vu0_ref, vv0_ref, vw0_ref;
-extern float	vd1_ref, vq1_ref, id1_ref, iq1_ref;
-extern float	va1_ref, vb1_ref, vu1_ref, vv1_ref, vw1_ref;
-// Global: current control values
-extern float	iq0_ref_ff, iq0_ref_fb, iq0_pid;
+// Global: inverter control values
+extern float	vd_ref, vq_ref, id_ref, iq_ref;
+extern float	va_ref, vb_ref, vu_ref, vv_ref, vw_ref;
+extern float	iq_ref_ff, iq_ref_fb, iq_pid;
 // Global: Pole-Zero Cancel PI
 extern float	Ai_pzcpi, Bi_pzcpi;
 extern float	Ci_pzcpi, Di_pzcpi;

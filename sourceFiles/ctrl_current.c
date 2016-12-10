@@ -19,13 +19,10 @@ float	vhys = 2.8800000000e-02;
 double xff_q = 0.0, xfb_d = 0.0, xfb_q = 0.0;
 float x_id = 0.0, x_iq = 0.0;
 
-// Global: main+sub inverter control values
-float vd0_ref = 0.0, vq0_ref = 0.0, id0_ref = 0.0, iq0_ref = 0.0;
-float va0_ref = 0.0, vb0_ref = 0.0, vu0_ref = 0.0, vv0_ref = 0.0, vw0_ref = 0.0;
-float vd1_ref = 0.0, vq1_ref = 0.0, id1_ref = 0.0, iq1_ref = 0.0;
-float va1_ref = 0.0, vb1_ref = 0.0, vu1_ref = 0.0, vv1_ref = 0.0, vw1_ref = 0.0;
-// Global: current control values
-float iq0_ref_ff = 0.0, iq0_ref_fb = 0.0, iq0_pid = 0.0;
+// Global: inverter control values
+float vd_ref = 0.0, vq_ref = 0.0, id_ref = 0.0, iq_ref = 0.0;
+float va_ref = 0.0, vb_ref = 0.0, vu_ref = 0.0, vv_ref = 0.0, vw_ref = 0.0;
+float iq_ref_ff = 0.0, iq_ref_fb = 0.0, iq_pid = 0.0;
 // Global: Pole-Zero Cancel PI
 float	Ai_pzcpi = 0.0, Bi_pzcpi = 0.0;
 float	Ci_pzcpi = 0.0, Di_pzcpi = 0.0;

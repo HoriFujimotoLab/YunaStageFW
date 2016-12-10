@@ -105,8 +105,8 @@ void system_fsm_mode(void)
 
 void system_fsm_err(void)
 {	
-	motor_adc_read(0, &vu_ex, &vw_ex, &iu_ex, &iw_ex);
-	motor_adc_read(1, &lsw_s, &lsw_m, &home_ad, &temp_m);
+	hardw_pev_read(0, &vu_ex, &vw_ex, &iu_ex, &iw_ex);
+	hardw_pev_read(1, &lsw_s, &lsw_m, &home_ad, &temp_m);
 	if (firmerr != 0)				{ err = err | FWE_LED; }				// 1. firmware error
 	if (fabsf(iu_ex) > OVC_LIM)		{ err = err | OVC_LED; }				// 2. overcurrent
 	if (fabsf(iw_ex) > OVC_LIM)		{ err = err | OVC_LED; }				// 2.
