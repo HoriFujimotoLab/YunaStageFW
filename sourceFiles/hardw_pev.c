@@ -22,6 +22,10 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #define		R_SS		(1.0)				// sys safety sensors (100%/5V)
 
 // MODULE VAR
+// global
+float lsw_m, lsw_s, home_ad, temp_m;
+float vu_ex, vw_ex, iu_ex, iw_ex;
+// local
 float pe_avg[8] = { 0.0 };					// MW-PEV average offsets
 
 

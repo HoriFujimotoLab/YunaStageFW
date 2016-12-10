@@ -19,8 +19,8 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 
 // MODULE VAR
 // global
-float theta_m, theta_e, omega_m;
-int theta_m_nano, omega_m_nano;
+float theta_s, theta_e, omega_s;
+int theta_s_nano, omega_s_nano;
 // local
 static int nrofr = 0;						// number of turns [-]
 

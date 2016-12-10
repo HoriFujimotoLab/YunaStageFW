@@ -9,6 +9,9 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #ifndef	HARDW_PEV_H
 #define	HARDW_PEV_H
 
+// MODULE VAR
+extern float lsw_m, lsw_s, home_ad, temp_m;
+extern float vu_ex, vw_ex, iu_ex, iw_ex;
 
 /*	INIT PEV BOARD ADC
 **	------------------

@@ -6,20 +6,29 @@ Boards:		MWPE-Expert3, MWPE-DIO (MWPE-PEV dio connect)
 Sensor:		Digital input from inverter & emergency switches
 Author:		Thomas Beauduin, University of Tokyo, 2015
 *************************************************************************************/
-
 #ifndef	SYSTEM_FSM_H
 #define	SYSTEM_FSM_H
+
+extern enum mode {
+	SYS_STP = 0x01,				// LED (0001)
+	SYS_INI = 0x02,				// LED (0010)
+	SYS_RUN = 0x04,				// LED (0100)
+	SYS_ERR = 0x0f				// LED (1111)
+} sysmode_e;
+extern int msr, cnt;			// measurement counters
+extern int set, calib;			// calibration counters
+extern float time;
 
 /*	HARDWARE MODULES INCLUSION
 **	--------------------------
 **	DES:	include the required hardware modules headers
 **			necessary for the particular setup configuration
 */
-#include	"motor_pem.h"
-#include	"motor_enc.h"
-#include	"stage_adc.h"
-#include	"stage_enc.h"
-#include	"stage_lin.h"
+#include	"hardw_pev.h"
+#include	"hardw_adc.h"
+#include	"hardw_lin.h"
+#include	"hardw_menc.h"
+#include	"hardw_senc.h"
 #include	"system_data.h"
 #include	<mwio3.h>
 
@@ -29,9 +38,9 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 **	DES:	include the required control modules headers
 **			necessary for the particular experiment configuration
 */
-#include	"drive_ctrl.h"
-#include	"motion_ctrl.h"
-#include	<math.h>
+#include	"ctrl_current.h"
+#include	"ctrl_motion.h"
+#include	"ctrl_traject.h"
 
 
 /*	INIT SYSTEM PROTECTION

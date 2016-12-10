@@ -31,12 +31,18 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define		LSW_LED		0x8000			// 8. limit switch			(DO15)
 
 // MODULE PAR
-#define		PEV_BDN		0						// pev board number
-#define		INV_CH		0						// pev inverter channel
+#define		PEV_BDN		0				// pev board number
+#define		INV_CH		0				// pev inverter channel
+#define		SWT_PRT		0.2				// switch protection time
 
-// MODULE VAR & FUNC
-unsigned int mes = 0;
-int din, don, err = 0, rst = 0;
+// MODULE VAR
+//global
+enum mode sysmode_e = SYS_STP;
+int msr = -1, cnt = 0;					// measurement counters
+int set = -1, calib = 0;				// calibration counters
+float time = 0.0;
+// local
+int din, don, err = 0;
 int firmerr = 0, senserr = 0;
 void system_fsm_err(void);
 void system_fsm_reset(void);
@@ -44,15 +50,21 @@ void system_fsm_reset(void);
 
 void system_fsm_mode(void)
 {
-	din = pev_pio_in(PEV_BDN); don = 0;											// DI read, DO reset
+	if (time / FS >= SWT_PRT) {
+		din = pev_pio_in(PEV_BDN); don = 0;	time = 0;							// DI read, DO reset
+	}
 	switch (sysmode_e)
 	{
 	case SYS_STP:
 		if (INI_SW == (din & INI_SW)){											// init switch on
 			pev_pio_out(PEV_BDN, don);											// reset relays				
-			pev_inverter_start_pwm(PEV_BDN, INV_CH); sysmode_e = SYS_INI; }		// drive ctrl on
+			pev_inverter_start_pwm(PEV_BDN, INV_CH); 
+			sysmode_e = SYS_INI; 
+		}
 		if (INI_SW == (din & INI_SW) && RUN_SW == (din & RUN_SW)){				// avoid direct init
-			err = err | FWE_LED; sysmode_e = SYS_ERR; }							// firmware init err
+			err = err | FWE_LED; 
+			sysmode_e = SYS_ERR; 
+		}
 		break;
 
 	case SYS_INI:
@@ -102,7 +114,7 @@ void system_fsm_err(void)
 	if (fabsf(vu_ex) > OVV_LIM)		{ err = err | OVV_LED; }				// 3. overvoltage
 	if (fabsf(vw_ex) > OVV_LIM)		{ err = err | OVV_LED; }				// 3.
 	if (fabsf(vdc_ad) > OVV_LIM)	{ err = err | OVV_LED; }				// 3.
-	if (fabsf(omega_ma) > OVS_LIM)	{ err = err | OVS_LED; }				// 4. motor overspeed
+	if (fabsf(omega_m) > OVS_LIM)	{ err = err | OVS_LED; }				// 4. motor overspeed
 	if (sysmode_e == SYS_RUN)
 	{
 		if (HWE_DI == (din & HWE_DI))	{ err = err | HWE_LED; }			// 5. hardware error
@@ -120,27 +132,24 @@ void system_fsm_err(void)
 void system_fsm_reset(void)
 {
 	// CTRL RESET
-	drive_ctrl_reset();
-	motion_ctrl_reset();
+	ctrl_current_reset();
+	ctrl_motion_reset();
 
 	// HARD RESET
-	motor_enc_reset(&theta_m);
-	stage_enc_reset();
-	stage_lin_reset();
+	hardw_menc_reset(&theta_m);
+	hardw_senc_reset();
+	hardw_lin_reset();
 }
 
 
 void system_fsm_init(void)
 {
-	pev_inverter_stop_pwm(PEV_BDN, INV_CH); sysmode_e = SYS_STP;
+	pev_inverter_stop_pwm(PEV_BDN, INV_CH); 
+	sysmode_e = SYS_STP;
 }
 
 
 /* NOTES:
 ** ------
-** protect the modes/switches from glitching by extra retrig counter
-** avoid new system mode switch for a period of a few hundred micro-sec
-** add a counter test to check the update speed of the fsm loop, compared
-** to the fs and fc (measure msr and msr_fsm to check fs_fsm)
-** (sample and hold structure)
 */
+

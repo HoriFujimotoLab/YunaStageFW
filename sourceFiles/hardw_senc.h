@@ -10,8 +10,8 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #define	HARDW_SENC_H
 
 // MODULE VAR
-extern float theta_m, theta_e, omega_m;
-extern int theta_m_nano, omega_m_nano;
+extern float theta_s, theta_e, omega_s;
+extern int theta_s_nano, omega_s_nano;
 
 
 /*	INIT ENCODER & BOARD

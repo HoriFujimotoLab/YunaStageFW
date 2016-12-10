@@ -3,11 +3,11 @@ STAGE SENSOR ADC MODULE
 -----------------------
 Descr.:		Hardware module adc of stage sensors
 Boards:		MWPE3-C6713A, MWPE3-ADC (14 bit)
-Sensor:		current sensors (hioki), load-cells (Kyowa), disp sensors (Keyence)
-Author:		Thomas Beauduin, University of Tokyo, April 2015
+Sensor:		hioki,kyowa,keyence: Yuna ball-screw setup
+Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
-
-#include	"stage_adc.h"
+#include	"hardw_adc.h"
+#include	"system_data.h"
 #include	<mwio3.h>
 
 // MODULE PAR
@@ -45,7 +45,7 @@ float acc_mx, acc_tx, acc_tz, acc_sx;
 // local
 float ad_avg[12] = { 0.0 };				// MW-ADC average offsets
 
-void stage_adc_init(void)
+void hardw_adc_init(void)
 {
 	// LOCAL VAR
 	int i = 0, j = 0;													// loop counters
@@ -77,7 +77,7 @@ void stage_adc_init(void)
 }
 
 
-void stage_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3)
+void hardw_adc_read(int grp_ad, float *ad0, float *ad1, float *ad2, float *ad3)
 {
 	adc_ad_in_grp(ADC_BDN, grp_ad, &*ad0, &*ad1, &*ad2, &*ad3);
 	if (grp_ad == 0) { *ad2 = -*ad2; *ad3 = -*ad3; }					// hioki cabling inverse

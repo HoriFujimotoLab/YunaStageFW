@@ -48,7 +48,7 @@ void hardw_menc_elec(float *theta_e)	//int *theta_nano
 	(*(volatile int*)(RST_ADDR + ((PIOS_BDN) << 14))); wait(3);				// reset flag
 	pios_pio_clr_bit(PIOS_BDN, 4);											// bit4 RQSTB
 	data_msr = (*(volatile int*)(DAT_ADDR + ((PIOS_BDN) << 14)) & 0x000FFFFF);
-	*theta_nano = (int)data_msr;
+	//*theta_nano = (int)data_msr;
 	theta_msr = (double)data_msr / ENC_RES * PI(2) * ENC_DIR;				// [cnt] to [rad]
 
 	// ELEC
