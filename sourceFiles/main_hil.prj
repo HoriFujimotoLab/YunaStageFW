@@ -2,7 +2,7 @@
 LIB	"c67x_dsplib.lib" "c67x_fastmath.lib"	# "":Tue Oct 25 20:46:01 2016
 OBJ	""	# Create:Wed Jun 08 18:33:17 2016
 HEADER	""	# Create:Sun Aug 21 12:17:04 2016
-SRC	"ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_lin.c" "hardw_menc.c" "hardw_pev.c" "hardw_senc.c" "main_hil.c" "system_fsm.c"	# "ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_dac.c" "hardw_lin.c" "hardw_pev.c" "main_hil.c" "system_fsm.c":Sat Dec 10 16:48:38 2016
+SRC	"ctrl_current.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_lin.c" "hardw_menc.c" "hardw_pev.c" "hardw_senc.c" "main_hil.c" "system_fsm.c" "system_math.c"	# "ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_lin.c" "hardw_menc.c" "hardw_pev.c" "hardw_senc.c" "main_hil.c" "system_fsm.c":Sun Dec 11 18:07:10 2016
 [CONFIGURE]
 PEOS_VER	"1_17"	# "1_16":Mon Jun 27 22:20:11 2016
 PROTECT	"OFF"	# Create:Wed Jun 08 18:33:17 2016
