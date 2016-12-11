@@ -14,14 +14,7 @@ Author:		Thomas Beauduin, Wataru Ohnishi
 extern float	vd_ref, vq_ref, id_ref, iq_ref;
 extern float	va_ref, vb_ref, vu_ref, vv_ref, vw_ref;
 extern float	iq_ref_ff, iq_ref_fb, iq_pid;
-// Global: Pole-Zero Cancel PI
-extern float	Ai_pzcpi, Bi_pzcpi;
-extern float	Ci_pzcpi, Di_pzcpi;
-extern float	Fbw_pzcpi;
-// Global: Zero-Cancel PI
-extern float	Affi, Bffi, Cffi, Dffi;
-extern float	Afbi, Bfbi, Cfbi, Dfbi;
-extern float	Fbw_zcpi, zeta_zcpi;
+
 
 /*	POLE-ZERO CANCEL PI
 **	-------------------
@@ -31,7 +24,7 @@ extern float	Fbw_zcpi, zeta_zcpi;
 **			id/q_ad	: dq-axis measured current
 **	OUT:	vd/q_ref: dq-axis reference voltage
 */
-void ctrl_current_pzcpi(float Ai_pzcpi, float Bi_pzcpi, float Ci_pzcpi, float Di_pzcpi, float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref);
+//void ctrl_current_pzcpi(float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref);
 
 /*	POLE-ZERO CANCEL PI [A,B,C,D] design
 **	-------------------
@@ -40,7 +33,7 @@ void ctrl_current_pzcpi(float Ai_pzcpi, float Bi_pzcpi, float Ci_pzcpi, float Di
 **						typical value Fbw = 500 [Hz]
 **	OUT:	[A,B,C,D] : state space matrix of the current controller
 */
-void ctrl_current_pzcpi_init(float Fbw, float *Ai_pzcpi, float *Bi_pzcpi, float *Ci_pzcpi, float *Di_pzcpi);
+//void ctrl_current_pzcpi_init(float Fbw, float *Ai_pzcpi, float *Bi_pzcpi, float *Ci_pzcpi, float *Di_pzcpi);
 
 
 /*	ZERO-CANCEL PI CTRL
@@ -50,7 +43,7 @@ void ctrl_current_pzcpi_init(float Fbw, float *Ai_pzcpi, float *Bi_pzcpi, float 
 **			id/q_ad	: dq-axis measured current 
 **	OUT:	vd/q_ref: dq-axis reference voltage 
 */
-void ctrl_current_zcpi(float Affi, float Bffi, float Cffi, float Dffi, float Afbi, float Bfbi, float Cfbi, float Dfbi, float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref);
+void ctrl_current_zcpi(float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref);
 
 
 /*	ZERO-CANCEL PI CTRL DESIGN
@@ -62,7 +55,7 @@ void ctrl_current_zcpi(float Affi, float Bffi, float Cffi, float Dffi, float Afb
 **			zeta	: damping factor of the closed loop denominator
 **	OUT:	[Affi,Bffi,Cffi,Dffi], [Afbi,Bfbi,Cfbi,Dfbi]
 */
-void ctrl_current_zcpi_init(float Fbw, float zeta, float *Affi, float *Bffi, float *Cffi, float *Dffi, float *Afbi, float *Bfbi, float *Cfbi, float *Dfbi);
+//void ctrl_current_zcpi_init(float Fbw, float zeta, float *Affi, float *Bffi, float *Cffi, float *Dffi, float *Afbi, float *Bfbi, float *Cfbi, float *Dfbi);
 
 
 /*	DQ DECOUPLING CTRL

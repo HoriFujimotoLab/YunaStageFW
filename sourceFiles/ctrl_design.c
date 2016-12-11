@@ -5,7 +5,8 @@ Descr.:		Filter design functions
 Author:		Wataru Ohnishi, The University of Tokyo
 *************************************************************************************/
 #include "ctrl_design.h"
-#include	"system_data.h"
+#include "system_math.h"
+#include "data/system_data.h"
 
 
 void ctrl_FiltInit1(float b1, float b0, float a1, float a0, float Ts, float *A, float *B, float *C, float *D)

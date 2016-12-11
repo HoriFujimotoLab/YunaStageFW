@@ -24,7 +24,7 @@ extern int nroft;
 **			Aref	: amplitude of reference signal
 **	OUT:	x_ref	: calculated motion reference
 */
-void ctrl_traject_ref(int reftype_e, float pos_fb, float Aref, float Fref, float *x_ref);
+void ctrl_traject_ref(int reftype_e, float Aref, float Fref, float *x_ref);
 
 
 #endif

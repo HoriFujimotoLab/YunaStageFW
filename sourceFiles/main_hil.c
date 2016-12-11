@@ -12,6 +12,8 @@ void system_init(void);
 //interrupt void system_tint0(void);
 interrupt void system_cint5(void);
 
+float test = 0.0;
+
 void main(void)
 {
 	// SYSTEM INIT
@@ -28,15 +30,37 @@ void system_cint5(void)
 	time = time + TC;
 
 	// SENSOR READ
-	hardw_adc_read(0, &iu_ad, &iw_ad, &vdc_ad, &idc_ad);
-	hardw_adc_read(1, &load_m, &load_s, &acc_tx, &acc_tz);
+	hardw_adc_read(0, &vdc_ad, &idc_ad, &iu_ad, &iw_ad);
+	hardw_adc_read(1, &load_m, &load_s, &acc_mx, &acc_tx);
 	hardw_lin_read(&pos_t_nano, &pos_t, &vel_t_nano, &vel_t);
-	hardw_menc_read(&theta_m, &omega_m);
-	hardw_menc_read(&theta_s, &omega_s);
+	hardw_senc_read(&theta_s_nano, &theta_s, &omega_s_nano, &omega_s);
+	hardw_menc_read(&theta_m_nano, &theta_m, &omega_m_nano, &omega_m, &theta_e);
 
-	// MOTOR OUTPUT
-	hardw_inv_pwm(0, 0, 0, vdc_ad);
+	// REFERENCE GENERATION
+	if (sysmode_e == SYS_STP) {}
+	if (sysmode_e == SYS_INI) {}
+	if (sysmode_e == SYS_RUN) {
+		if (msr >= 0 && msr < nroft) {
+			ctrl_traject_ref(reftype_e, Aref, Fref, &iq_ref);
+			msr++;
+		}
+		else { iq_ref = 0.0; }
+	}
 
+	// CURRENT CONTROL
+	if (sysmode_e == SYS_INI || sysmode_e == SYS_RUN)
+	{
+		ctrl_current_uw2ab(iu_ad, iw_ad, &ia_ad, &ib_ad);
+		ctrl_current_ab2dq(ia_ad, ib_ad, theta_e, &id_ad, &iq_ad);
+		ctrl_current_zcpi(iq_ref, id_ad, iq_ad, &vd_ref, &vq_ref);
+		ctrl_current_dec(omega_m, id_ad, iq_ad, &vd_ref, &vq_ref);
+		ctrl_current_dq2ab(vd_ref, vq_ref, theta_e, &va_ref, &vb_ref);
+		ctrl_current_ab2uvw(va_ref, vb_ref, &vu_ref, &vv_ref, &vw_ref);
+		hardw_inv_pwm(vu_ref, vv_ref, vw_ref, vdc_ad);
+	}
+	else {
+		hardw_inv_pwm(0, 0, 0, vdc_ad);
+	}
 	watch_data_8ch();
 }
 
@@ -71,11 +95,11 @@ void system_init(void)
 {
 	// SENSORS
 	watch_init();
-	hardw_lin_init();
 	hardw_pev_init();
 	hardw_adc_init();
-	hardw_menc_init();
-	hardw_senc_init();
+	hardw_lin_init(FC, 500);
+	hardw_menc_init(FC, 500);
+	hardw_senc_init(FC, 500);
 
 	// DRIVE CTRL
 	int5_init_vector(system_cint5);

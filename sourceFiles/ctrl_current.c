@@ -7,33 +7,21 @@ Author:		Thomas Beauduin, Wataru Ohnishi
 			Hori-Fujimoto lab, University of Tokyo, 2016
 *************************************************************************************/
 #include	"ctrl_current.h"
-#include	"ctrl_math.h"
-#include	"system_data.h"
+#include	"system_math.h"
 #include	"data/ctrl_current_par.h"
+#include	"data/system_data.h"
 
 // MODULE VAR
-//Local: Dead-Time Compensation
-float	ihys = 5.0000000000e-02;
-float	vhys = 2.8800000000e-02;
 // Local: State-Space Control state vectors
 double xff_q = 0.0, xfb_d = 0.0, xfb_q = 0.0;
 float x_id = 0.0, x_iq = 0.0;
-
 // Global: inverter control values
 float vd_ref = 0.0, vq_ref = 0.0, id_ref = 0.0, iq_ref = 0.0;
 float va_ref = 0.0, vb_ref = 0.0, vu_ref = 0.0, vv_ref = 0.0, vw_ref = 0.0;
 float iq_ref_ff = 0.0, iq_ref_fb = 0.0, iq_pid = 0.0;
-// Global: Pole-Zero Cancel PI
-float	Ai_pzcpi = 0.0, Bi_pzcpi = 0.0;
-float	Ci_pzcpi = 0.0, Di_pzcpi = 0.0;
-float	Fbw_pzcpi = 500;
-// Global: Zero-Cancel PI
-float	Affi = 0.0, Bffi = 0.0, Cffi = 0.0, Dffi = 0.0;
-float	Afbi = 0.0, Bfbi = 0.0, Cfbi = 0.0, Dfbi = 0.0;
-float	Fbw_zcpi = 1000; // [Hz]
-float	zeta_zcpi = 0.848528137423857; // 1.2/sqrt(2)
 
 
+/*
 void ctrl_current_pzcpi(float Ai_pzcpi, float Bi_pzcpi, float Ci_pzcpi, float Di_pzcpi, float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
 {
 	float e_id, e_iq;
@@ -45,8 +33,8 @@ void ctrl_current_pzcpi(float Ai_pzcpi, float Bi_pzcpi, float Ci_pzcpi, float Di
 	x_id = Ai_pzcpi * x_id + Bi_pzcpi * e_id;
 	x_iq = Ai_pzcpi * x_iq + Bi_pzcpi * e_iq;
 }
-
-
+*/
+/*
 void ctrl_current_pzcpi_init(float Fbw, float *Ai_pzcpi, float *Bi_pzcpi, float *Ci_pzcpi, float *Di_pzcpi)
 {
 	float Ti = (1 / (PI(2) * Fbw));
@@ -56,9 +44,9 @@ void ctrl_current_pzcpi_init(float Fbw, float *Ai_pzcpi, float *Bi_pzcpi, float 
 	*Ci_pzcpi = Rs / (Ti * FC);
 	*Di_pzcpi = (2 * Ls * FC + Rs) / (2 * Ti * FC);
 }
+*/
 
-
-void ctrl_current_zcpi(float Affi, float Bffi, float Cffi, float Dffi, float Afbi, float Bfbi, float Cfbi, float Dfbi, float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
+void ctrl_current_zcpi(float iq_ref, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
 {
 	double iq_ff, id_er, iq_er;
 	
@@ -73,7 +61,7 @@ void ctrl_current_zcpi(float Affi, float Bffi, float Cffi, float Dffi, float Afb
 	xfb_q = Afbi * xfb_q + Bfbi * iq_er;
 }
 
-
+/*
 void ctrl_current_zcpi_init(float Fbw, float zeta, float *Affi, float *Bffi, float *Cffi, float *Dffi, float *Afbi, float *Bfbi, float *Cfbi, float *Dfbi)
 {
 	// I_currentCtrl_sym.m
@@ -87,12 +75,12 @@ void ctrl_current_zcpi_init(float Fbw, float zeta, float *Affi, float *Bffi, flo
 	*Cfbi = (0.35530575843921691027804167599554*Fbw * Fbw) / FC;
 	*Dfbi = 0.11309733552923255658465516179806*Fbw*zeta + (0.17765287921960845513902083799777*Fbw * Fbw) / FC - 10.5;
 }
-
+*/
 
 void ctrl_current_dec(float omega_m, float id_ad, float iq_ad, float *vd_ref, float *vq_ref)
 {
-	*vd_ref -= (omega_m * Ls * iq_ad);								// coupling compensation
-	*vq_ref += (omega_m * Ke);										// back-emf compensation
+	*vd_ref -= (omega_m * Ls * iq_ad);									// coupling compensation
+	*vq_ref += (omega_m * Ke);											// back-emf compensation
 }
 
 

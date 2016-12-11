@@ -1,16 +1,17 @@
 //MOTOR CTRL PARAMETERS:
-//Zero cancell FF
-/*
-float	Affi = 0.707125862050932;
-float	Bffi = 0.500000000000000;
-float	Cffi = 0.499973015218726;
-float	Dffi = 0.146437068974534;
+//Zero-Cancel FF
+float	Affi = 7.7357499228e-01;
+float	Bffi = 5.0000000000e-01;
+float	Cffi = 4.0158173132e-01;
+float	Dffi = 1.1321250386e-01;
 
 //Pole-Place PI
-float	Afbi = 1.000000000000000;
-float	Bfbi = 4.000000000000000;
-float	Cfbi = 5.684892135027470;
-float	Dfbi = 77.642801441431487;
-*/
+float	Afbi = 1.0000000000e+00;
+float	Bfbi = 2.0000000000e+00;
+float	Cfbi = 3.4227788063e+00;
+float	Dfbi = 3.0233222388e+01;
 
+//Dead-Time SP
+float	ihys = 5.0000000000e-02;
+float	vhys = 2.8800000000e-02;
 
