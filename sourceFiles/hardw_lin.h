@@ -23,7 +23,7 @@ extern float pos_t, vel_t;
 **	DES:	initiate fpga board and encoder by register set/clear
 **			necessary at program init before encoder reading
 */
-void hardw_lin_init(void);
+void hardw_lin_init(int fs, int fc);
 
 
 /*	READ LINEAR-SCALE DATA
@@ -47,12 +47,12 @@ void hardw_lin_read(int *pos_nano, float *pos, int *vel_nano, float *vel);
 void hardw_lin_status(int *status);
 
 
-/*	READ LINEAR-SCALE STATUS
-**	------------------------
+/*	HOME LINEAR-SCALE
+**	-----------------
 **	DES:	returns the data count registers to 0
 **			necessary at stage home referencing 
 */
-void hardw_lin_reset(void);
+void hardw_lin_home(void);
 
 
 #endif

@@ -7,26 +7,29 @@ Sensor:		20bit absolute rotary encoder (nikon)
 Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
 #include	"hardw_senc.h"
-#include	"system_data.h"
+#include	"system_math.h"
+#include	"data/system_data.h"
 #include	<mwio3.h>
 
 // MODULE PAR
 #define	FPGA_BDN	0						// FPGAA board number
 #define	ENC_RES		(1048576.0)				// 20bit resolution [cnt/turn]
-#define ENC_DIR		(-1.0)					// direction rel to motor uvw
 #define ENC_OFF		(2.125)					// setup encoder-rotor offset
-#define ALPHA		(0.50)					// recusive iir maf factor
 
 // MODULE VAR
 // global
-float theta_s, omega_s;
-int theta_s_nano, omega_s_nano;
+float theta_s = 0.0, omega_s = 0.0;
+int theta_s_nano = 0, omega_s_nano = 0;
 // local
-static int nrofr = 0;						// number of turns [-]
+static int nrofr = 0;
+static int theta_nano_temp;
+static double theta_db_temp = 0.0;
+static float theta_home = 0.0;
+static float fs_s, alpha = 0.0;
 
-
-void hardw_senc_init(void)
+void hardw_senc_init(int fs, int fc)
 {
+	// LAUNCH
 	int reset = 0;															// reset counter
 	*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA04) = 0x00000000;					// set clear register
 	for (reset = 0; reset < 8; reset++)										// iterate over registers
@@ -34,35 +37,48 @@ void hardw_senc_init(void)
 		*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA00) = 0xC0000008;				// clear enc registers
 	}		
 	*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA00) = 0xC0000F00;					// read bit for init
+	
+	// PAR
+	fs_s = (float)fs;
+	alpha = expsp(-PI(2)*(float)fc / fs_s);
+
+	// READ 1e
+	*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA00) = 0xC0000F00;
+	theta_nano_temp = (*(FPGA_addr + ((FPGA_BDN) << 12) + 0x804) & 0xFFFFF);
+	theta_db_temp = (double)(theta_nano_temp) / ENC_RES * PI(2);
 }
 
 
-void hardw_senc_read(float *theta_s, float *omega_s)
+void hardw_senc_read(int *theta_s_nano, float *theta_s, int *omega_s_nano, float *omega_s)
 {
-	// LOCAL VAR
-	int data_ms = 0;														// measured data  [cnt]
-	double theta_ms = 0.0;													// measured theta [rad]
-	double diff = 0.0;														// position diff  [rad]
-	int i = 0;																// rev jump index [-]
+	int i = 0, diff;
+	double theta_db;
+	float omega_temp;
 
-	// READ DATA
-	*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA00) = 0xC0000F00;					// send read bit
-	data_ms = (*(FPGA_addr + ((FPGA_BDN) << 12) + 0x804) & 0xFFFFF);		// read register
-	theta_ms = ((double)data_ms / ENC_RES * PI(2) * ENC_DIR) - ENC_OFF;		// [cnt] to [rad]
+	// NANO
+	*(FPGA_addr + ((FPGA_BDN) << 12) + 0xA00) = 0xC0000F00;
+	*theta_s_nano = (*(FPGA_addr + ((FPGA_BDN) << 12) + 0x804) & 0xFFFFF);
+	diff = *theta_s_nano - theta_nano_temp;
+	if (diff >  ENC_RES/2.0) { nrofr--; i--; }
+	if (diff < -ENC_RES/2.0) { nrofr++; i++; }
+	theta_nano_temp = *theta_s_nano;
 
-	// ANGLE
-	diff = theta_ms - (*theta_s - nrofr * PI(2));							// theta time difference
-	if (diff >  PI(1)){ nrofr--; i--; }										// revolution calc
-	if (diff < -PI(1)){ nrofr++; i++; }										// note: max vel pi*fs
-	*theta_s = theta_ms + nrofr * PI(2);									// full screw pos [rad]
-	*omega_s = (diff + i*PI(2)) * FS;										// full screw vel [rad/s]
-	//*omega_sa = ALPHA * *omega_s + (1 - ALPHA) * *omega_sa;				// resursive maf  [rad/s]
+	// MECH
+	omega_temp = *omega_s;
+	theta_db = (double)(*theta_s_nano) / ENC_RES * PI(2);
+	*theta_s_nano = *theta_s_nano + nrofr * ENC_RES;
+	*theta_s = (float)theta_db + nrofr * PI(2) - theta_home;
+	*omega_s_nano = (diff + i*ENC_RES) * fs_s;
+	*omega_s = (float)((theta_db - theta_db_temp + i*PI(2)) * fs_s);
+	*omega_s = *omega_s * (1.0 - alpha) + omega_temp * alpha;				// resursive iir maf
+	theta_db_temp = theta_db;
 }
 
 
-void hardw_senc_reset(void)
+void hardw_senc_home(void)
 {
-	nrofr = 0;																// set start position
+	nrofr = 0;
+	theta_home = (float)theta_db_temp;
 }
 
 

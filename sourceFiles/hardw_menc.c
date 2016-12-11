@@ -7,7 +7,8 @@ Sensor:		20bit absolute rotary encoder (Tamagawa)
 Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
 #include "hardw_menc.h"
-#include "system_data.h" 
+#include "system_math.h"
+#include "data/system_data.h"
 #include <mwio3.h>
 
 // MODULE PAR
@@ -16,70 +17,86 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #define PIOS_BDN		0							// PIOS board dip switch number
 #define ENC_OFF			(3.169)					    // setup encoder-rotor offset (M1:3.2427)
 #define	ENC_RES			(1048576.0)					// 20bit resolution [cnt/turn]
-#define	ENC_DIR			(-1.0)						// encoder rotation direction
-#define ALPHA			(0.05)						// recursive IIR MAF factor
+#define	ENC_DIR			(-1.0)						// rotor electrical direction
 
 // MODULE VAR
 // global
-float theta_m, theta_e, omega_m;
-int theta_m_nano, omega_m_nano;
+float theta_m = 0.0, theta_e, omega_m = 0.0;
+int theta_m_nano = 0, omega_m_nano = 0;
+
 // local
-static int nrofr = 0;								// number of turns [-]
-static double theta_msr;							// measured theta  [rad]
+static int nrofr = 0;
+static int theta_nano_temp = 0;
+static double theta_db_temp = 0.0;
+static float theta_home = 0.0;
+static float fs_m, alpha = 0.0;
 
-void hardw_menc_init()
+void hardw_menc_init(int fs, int fc)
 {
-	pios_pio_set_bit(PIOS_BDN, 0);											// bit0 DS40
-	pios_pio_clr_bit(PIOS_BDN, 1);											// bit1 INRQ
-	pios_pio_set_bit(PIOS_BDN, 2);											// bit2 RQC0
-	pios_pio_set_bit(PIOS_BDN, 3);											// bit3 RQC1
-	pios_pio_clr_bit(PIOS_BDN, 5);											// bit5 ABSMD (20bit)
-	pios_pio_clr_bit(PIOS_BDN, 6);											// bit6 RESET
-}
+	unsigned int data_msr;
 
+	// LAUNCH
+	pios_pio_set_bit(PIOS_BDN, 0);					// bit0 DS40
+	pios_pio_clr_bit(PIOS_BDN, 1);					// bit1 INRQ
+	pios_pio_set_bit(PIOS_BDN, 2);					// bit2 RQC0
+	pios_pio_set_bit(PIOS_BDN, 3);					// bit3 RQC1
+	pios_pio_clr_bit(PIOS_BDN, 5);					// bit5 ABSMD (20bit)
+	pios_pio_clr_bit(PIOS_BDN, 6);					// bit6 RESET
 
-void hardw_menc_elec(float *theta_e)	//int *theta_nano
-{
-	// LOCAL VAR
-	unsigned int data_msr;													// measured data   [cnt]
+	// PAR
+	fs_m = (float)fs;
+	alpha = expsp(-PI(2)*(float)fc / fs_m);
 
-	// READ DATA
+	// READ 1e
 	pios_pio_set_bit(PIOS_BDN, 4);											// bit4 RQSTB
 	(*(volatile int*)(RST_ADDR + ((PIOS_BDN) << 14))); wait(3);				// reset flag
 	pios_pio_clr_bit(PIOS_BDN, 4);											// bit4 RQSTB
 	data_msr = (*(volatile int*)(DAT_ADDR + ((PIOS_BDN) << 14)) & 0x000FFFFF);
-	//*theta_nano = (int)data_msr;
-	theta_msr = (double)data_msr / ENC_RES * PI(2) * ENC_DIR;				// [cnt] to [rad]
+	theta_nano_temp = (int)data_msr;
+	theta_db_temp = (double)(theta_nano_temp) / ENC_RES * PI(2);			// [cnt] to [rad]
+
+}
+
+
+void hardw_menc_read(int *theta_m_nano, float *theta_m, int *omega_m_nano, float *omega_m, float *theta_e)
+{
+	int i = 0, diff;
+	unsigned int data_msr;
+	double theta_db;
+	float omega_temp = 0.0;
+
+	// NANO
+	pios_pio_set_bit(PIOS_BDN, 4);											// bit4 RQSTB
+	(*(volatile int*)(RST_ADDR + ((PIOS_BDN) << 14))); wait(3);				// reset flag
+	pios_pio_clr_bit(PIOS_BDN, 4);											// bit4 RQSTB
+	data_msr = (*(volatile int*)(DAT_ADDR + ((PIOS_BDN) << 14)) & 0x000FFFFF);
+	*theta_m_nano = (int)data_msr;
+	diff = *theta_m_nano - theta_nano_temp;
+	if (diff >  ENC_RES/2.0) { nrofr--; i--; }
+	if (diff < -ENC_RES/2.0) { nrofr++; i++; }
+	theta_nano_temp = *theta_m_nano;
 
 	// ELEC
-	*theta_e = (float)(theta_msr * Pp) - ENC_OFF;							// mech to elec
-	while (*theta_e > PI(2)) { *theta_e -= PI(2); }							// value limitation:
-	while (*theta_e < 0)	 { *theta_e += PI(2); }							// {0, 2pi}
-}
-
-
-void hardw_menc_read(float *theta_m, float *omega_m)
-{
-	// LOCAL VAR
-	double diff = 0.0;														// position diff   [rad]
-	int i = 0;																// rev jump index  [-]
+	theta_db = (double)(*theta_m_nano) / ENC_RES * PI(2);					// [cnt] to [rad]
+	*theta_e = (float)(theta_db * ENC_DIR * Pp - ENC_OFF);					// mech to elec
+	while (*theta_e > PI(2)) { *theta_e -= PI(2); }							// value limitation: {0, 2pi}
+	while (*theta_e < 0)	 { *theta_e += PI(2); }
 
 	// MECH
-	diff = theta_msr - (double)(*theta_m - nrofr * PI(2));					// theta time difference
-	if (diff >  PI(1)){ nrofr--; i--; }										// revolution calc
-	if (diff < -PI(1)){ nrofr++; i++; }										// note: max vel pi*fs
-	*theta_m = (float)(theta_msr + nrofr * PI(2));							// full screw pos calc
-	*omega_m = (float)((diff + i*PI(2)) * FS);								// full screw vel calc
-
-	// FILT
-	//*omega_ma = ALPHA * *omega_m + (1.0 - ALPHA) * *omega_ma;				// resursive iir maf
+	omega_temp = *omega_m;
+	*theta_m_nano = *theta_m_nano + nrofr * ENC_RES;
+	*theta_m = (float)(theta_db) + nrofr * PI(2) - theta_home;				// full screw calc
+	*omega_m_nano = (diff + i*ENC_RES) * fs_m;
+	*omega_m = (float)((theta_db - theta_db_temp + i*PI(2)) * fs_m);
+	*omega_m = *omega_m * (1.0 - alpha) + omega_temp * alpha;				// resursive iir maf
+	theta_db_temp = theta_db;
 }
 
 
-void hardw_menc_reset(float *theta_m)
+void hardw_menc_home(void)
 {
-	*theta_m = *theta_m - nrofr * PI(2);									// remove rev from data
-	nrofr = 0;																// reset number of rev
+	nrofr = 0;
+	theta_home = (float)theta_db_temp;
 }
 
 

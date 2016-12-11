@@ -19,7 +19,7 @@ extern int theta_s_nano, omega_s_nano;
 **	DES:	initiate fpga board and encoder by register set/clear
 **			necessary at program init before encoder reading
 */
-void hardw_senc_init(void);
+void hardw_senc_init(int fs, int fc);
 
 
 /*	READ STAGE ENCODER DATA
@@ -28,7 +28,10 @@ void hardw_senc_init(void);
 **	OUT:	theta_s:	theta mechanic for position control		[rad]	{-LR/2, LR/2}
 **			omega_s:	omega mechanic for decoupling control	[rad/s] {-2pi*fs, 2pi*fs}
 */
-void hardw_senc_read(float *theta_s, float *omega_s);
+void hardw_senc_read(
+	int *theta_s_nano, float *theta_s, 
+	int *omega_s_nano, float *omega_s
+);
 
 
 /*	RESET STAGE ENCODER MODULE
@@ -36,7 +39,7 @@ void hardw_senc_read(float *theta_s, float *omega_s);
 **	DES:	resets encoder module internal counters and variables
 **			necessary at measurement init to calibrate setup encoders
 */
-void hardw_senc_reset(void);
+void hardw_senc_home(void);
 
 
 /*	CHECK ENCODER STATUS

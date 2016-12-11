@@ -13,13 +13,12 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 extern float theta_m, theta_e, omega_m;
 extern int theta_m_nano, omega_m_nano;
 
-
 /*	INIT ENCODER & BOARD
 **	--------------------
 **	DES:	initiate pios board and encoder by register set/clear
 **			necessary at program init before encoder reading
 */
-void hardw_menc_init();
+void hardw_menc_init(int fs, int fc);
 
 
 /*	READ MOTOR ENCODER DATA
@@ -31,8 +30,11 @@ void hardw_menc_init();
 **			omega_ma:	omega averaged (time) for vel control	[rad/s]	{-2pi*fs, 2pi*fs}
 **	DSP:	calctime:	avgerage calclation time				8 [ms]  (vers. 29/11/15)
 */
-void hardw_menc_elec(float *theta_e);
-void hardw_menc_read(float *theta_m, float *omega_m);
+void hardw_menc_read(
+	int *theta_m_nano, float *theta_m, 
+	int *omega_m_nano, float *omega_m, 
+	float *theta_e
+);
 
 
 /*	RESET ENCODER MODULE
@@ -40,7 +42,7 @@ void hardw_menc_read(float *theta_m, float *omega_m);
 **	DES:	resets encoder module internal counters and variables
 **			necessary at measurement init to calibrate setup encoders
 */
-void hardw_menc_reset(float *theta_m);
+void hardw_menc_home();
 
 
 /*	CHECK ENCODER STATUS
