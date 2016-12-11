@@ -15,8 +15,11 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define		INI_SW		0x0100			// system init switch		(DI8)
 #define		RUN_SW		0x0200			// system run switch		(DI9)
 #define		ERR_SW		0x0400			// error override switch	(DI10)
-#define		OIL_SW		0x0800			// oil pump switch			(DI11)
-#define		LCF_SW		0x1000			// LC-filter switch			(DI12)
+
+#define		LCF_SW		0x2000			// LC-filter switch			(DI13)
+#define		OIL_SW		0x4000			// oil pump switch			(DI14)
+#define		HOM_SW		0x8000			// stage homing switch		(DI15)
+
 #define		OIL_DO		0x0001			// oil pump relay output	(DO0)
 #define		RST_DO		0x0002			// inv reset relay output	(DO1)
 #define		LCF_DO		0x0004			// LC filter output			(DO2)
@@ -39,13 +42,15 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 //global
 enum mode sysmode_e = SYS_STP;
 int msr = -1, cnt = 0;					// measurement counters
-int set = -1, calib = 0;				// calibration counters
 float time = 0.0;
+float iq_home = 5.2;
 // local
 int din, don, err = 0;
 int firmerr = 0, senserr = 0;
+int set = 0, calib = 0;
 void system_fsm_err(void);
 void system_fsm_reset(void);
+void system_fsm_home(void);
 
 
 void system_fsm_mode(void)
@@ -59,7 +64,7 @@ void system_fsm_mode(void)
 		if (INI_SW == (din & INI_SW)){											// init switch on
 			pev_pio_out(PEV_BDN, don);											// reset relays				
 			pev_inverter_start_pwm(PEV_BDN, INV_CH); 
-			sysmode_e = SYS_INI; 
+			sysmode_e = SYS_INI;
 		}
 		if (INI_SW == (din & INI_SW) && RUN_SW == (din & RUN_SW)){				// avoid direct init
 			err = err | FWE_LED; 
@@ -71,6 +76,8 @@ void system_fsm_mode(void)
 		system_fsm_err();														// check for errors
 		if (OIL_SW == (din & OIL_SW)) { don = don | OIL_DO; }					// oil pump on
 		if (LCF_SW == (din & LCF_SW)) { don = don | LCF_DO; }					// lc filter on
+		if (HOM_SW == (din & HOM_SW)) { system_fsm_home(); }
+		if (HOM_SW != (din & HOM_SW)) { iq_ref = 0.0; }
 		pev_pio_out(PEV_BDN, don);												// switch relays
 		if (err != 0) {															// error detected	
 			pev_inverter_stop_pwm(PEV_BDN, INV_CH); sysmode_e = SYS_ERR; }		// error mode change
@@ -131,14 +138,9 @@ void system_fsm_err(void)
 
 void system_fsm_reset(void)
 {
-	// CTRL RESET
 	ctrl_current_reset();
 	ctrl_motion_reset();
-
-	// HARD RESET
-	hardw_menc_reset(&theta_m);
-	hardw_senc_reset();
-	hardw_lin_reset();
+	Aref = 0.0;
 }
 
 
@@ -146,6 +148,20 @@ void system_fsm_init(void)
 {
 	pev_inverter_stop_pwm(PEV_BDN, INV_CH); 
 	sysmode_e = SYS_STP;
+}
+
+
+void system_fsm_home(void)
+{
+	if (home_ad < 0.5 && calib == 0) { iq_ref = +iq_home; }
+	if (home_ad > 0.5 && calib == 0) { iq_ref = -iq_home;
+		hardw_lin_home(); 
+		hardw_menc_home(); 
+		hardw_senc_home(); 
+		calib = 1; 
+	}
+	if (pos_t < 0.0 && calib == 1)	 { iq_ref = -iq_home; }
+	if (pos_t > 0.5 && calib == 1)   { iq_ref = +iq_home; }
 }
 
 

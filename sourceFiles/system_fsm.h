@@ -16,8 +16,11 @@ extern enum mode {
 	SYS_ERR = 0x0f				// LED (1111)
 } sysmode_e;
 extern int msr, cnt;			// measurement counters
-extern int set, calib;			// calibration counters
+extern float iq_home;
 extern float time;
+
+#include	"system_math.h"
+#include	"data/system_data.h"
 
 /*	HARDWARE MODULES INCLUSION
 **	--------------------------
@@ -29,7 +32,6 @@ extern float time;
 #include	"hardw_lin.h"
 #include	"hardw_menc.h"
 #include	"hardw_senc.h"
-#include	"system_data.h"
 #include	<mwio3.h>
 
 
