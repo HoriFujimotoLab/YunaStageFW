@@ -6,9 +6,10 @@ Boards:		MWPE-Expert3, MWPE-PEV (PEV expansion board)
 PWelec:		MWINV-9R122A	(9.1kVA power module)
 Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
-#include "hardw_pev.h"
-#include "system_data.h"
-#include <mwio3.h>
+#include	"hardw_pev.h"
+#include	"system_math.h"
+#include	"data/system_data.h"
+#include	<mwio3.h>
 
 // MODULE PAR
 #define		PEV_BDN		0					// pev board number		 [-]

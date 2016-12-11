@@ -7,7 +7,8 @@ Sensor:		hioki,kyowa,keyence: Yuna ball-screw setup
 Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
 #include	"hardw_adc.h"
-#include	"system_data.h"
+#include	"system_math.h"
+#include	"data/system_data.h"
 #include	<mwio3.h>
 
 // MODULE PAR
@@ -15,8 +16,8 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #define		NROFM	(500.0)				// number of offset msr
 
 // ADC RANGES
-#define		R_EC	(1000.0)			// Eddy-Current sensors	[um]  (1mm/5V)
-#define		R_LC	(5000.0)			// Load-Cell sensors	[N] (5kN/5V)
+#define		R_EC	(1000.0)			// Eddy-Current sensors	[um] (1mm/5V)
+#define		R_LC	(2000.0)			// Load-Cell sensors	[N] (2kN/5V)
 #define		R_IS	(31.25)				// Hioki current sensor [A] (31.25A/5V)
 #define		R_VS	(400.0)				// DC voltage sensor	[V] (400V/5V)
 #define		R_DC	(50.0)				// DC current sensor	[A] (50A/5V)
@@ -28,9 +29,9 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #define		R_AP	(500.501)			// AccPitch A32sn36789y	[m/s2] (9.99mV/m/s^2)
 
 // ADC OFFSETS (see notes)
-#define		O_VDC	(0.0)			// ch2 adc offset: vdc
-#define		O_LC1	(0.0)			// ch5 adc offset: load-cell
-#define		O_LC2	(0.0)			// ch6 adc offset: load-cell
+#define		O_VDC	(-2.65)				// ch2 adc offset: vdc
+#define		O_LC1	(-15.0)				// ch5 adc offset: load-cell
+#define		O_LC2	(-36.5)				// ch6 adc offset: load-cell
 
 // MODULE VAR
 // inverter
@@ -55,8 +56,8 @@ void hardw_adc_init(void)
 	// RANGE SET						
 	adc_ad_init(ADC_BDN);												// init ADC board
 	adc_ad_set_range(ADC_BDN, 0, R_VS, R_DC, R_IS, R_IS);				// grp 0 range settings
-	adc_ad_set_range(ADC_BDN, 1, R_EC, R_EC, R_EC, R_EC);				// grp 1 range settings
-	adc_ad_set_range(ADC_BDN, 2, R_AM, R_AT, R_AP, R_AS);				// grp 2 range settings
+	adc_ad_set_range(ADC_BDN, 1, R_LC, R_LC, R_AM, R_AT);				// grp 1 range settings
+	adc_ad_set_range(ADC_BDN, 2, R_EC, R_EC, R_EC, R_EC);				// grp 2 range settings
 	
 	// AVG CALC
 	for (i = 0; i < 3; i++){
@@ -71,8 +72,8 @@ void hardw_adc_init(void)
 	}
 	
 	// OFFSET SET
-	adc_ad_set_offset(ADC_BDN, 0, O_VDC, ad_avg[1], ad_avg[2], ad_avg[3]);		
-	adc_ad_set_offset(ADC_BDN, 1, ad_avg[4], ad_avg[5], ad_avg[6], ad_avg[7]);
+	adc_ad_set_offset(ADC_BDN, 0, O_VDC, ad_avg[1], ad_avg[2], ad_avg[3]);
+	adc_ad_set_offset(ADC_BDN, 1, O_LC1, O_LC2, ad_avg[6], ad_avg[7]);
 	adc_ad_set_offset(ADC_BDN, 2, ad_avg[8], ad_avg[9], ad_avg[10], ad_avg[11]);
 }
 
