@@ -7,21 +7,26 @@ Author:		Thomas Beauduin, University of Tokyo, 2016
 *************************************************************************************/
 #include "system_math.h"
 
-#define	NMAX	(4)					// max amount of states
+#define	NMAX	(2)					// max amount of states
 
 void math_state(float A[], float x[], float B[], float u[], float *dx, int nrofs, int nrofi)
 {
 	float Ax[NMAX] = { 0.0 }; float Bu[NMAX] = { 0.0 };
-	DSPF_sp_mat_mul(A, nrofs, nrofs, x, 1, Ax);
+	switch (nrofs)
+	{
+	case 1:		vec_scale(A, x, Ax, nrofs);								break;		// SS
+	default:	mat_mul(A, nrofs, nrofs, x, 1, Ax);						break;		// MS
+	}
 	switch (nrofi)
 	{
 	case 1:		vec_scale(B, u, Bu, nrofs);								break;		// SI
-	default:	DSPF_sp_mat_mul(B, nrofs, nrofi, u, 1, Bu);				break;		// MI
+	default:	mat_mul(B, nrofs, nrofi, u, 1, Bu);						break;		// MI
 	}
 	vec_add(Ax, Bu, &*dx, nrofs);
 }
 
 
+//DSPF_sp_
 void math_output(float C[], float x[], float D[], float u[], float *y, int nrofs, int nrofi, int nrofo)
 {
 	float Cx[NMAX] = { 0.0 }; float Du[NMAX] = { 0.0 };
@@ -34,11 +39,11 @@ void math_output(float C[], float x[], float D[], float u[], float *y, int nrofs
 				default:	vec_dot(D, u, &Du[0], nrofi);				break;		// MISO
 				}
 	break;
-	default:	DSPF_sp_mat_mul(C, nrofo, nrofs, x, 1, Cx);
+	default:	mat_mul(C, nrofo, nrofs, x, 1, Cx);
 				switch (nrofi)
 				{
 				case 1:		vec_scale(D, u, Du, nrofo);					break;		// SIMO
-				default:	DSPF_sp_mat_mul(D, nrofo, nrofi, u, 1, Du);	break;		// MIMO
+				default:	mat_mul(D, nrofo, nrofi, u, 1, Du);			break;		// MIMO
 				}
 	break;
 	}
@@ -74,4 +79,18 @@ void vec_dot(float *x, float *y, float *r, int nr)
 		*r += x[i] * y[i];
 	}
 }
+
+
+// temp
+void mat_mul(float a[], int row_a, int col_a, float b[], int col_b, float *c)
+{
+	int i, k;
+	float sum;
+	for (i = 0; i < row_a; i++) {
+		sum = 0.0;
+		for (k = 0; k < col_a; k++) { sum += a[i*col_a + k] * b[k]; }
+		c[i] = sum;
+	}
+}
+
 

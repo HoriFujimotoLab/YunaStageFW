@@ -12,7 +12,9 @@ Author:		Thomas Beauduin, Wataru Ohnishi
 // MODULE VAR
 // Global: motion control variables
 extern float pos_ref, pos_err;			// [m]
+extern float v_ref, v_lpf;				// [m/s]
 extern float yd, time_ff;
+extern float i_shp;
 extern float Kff;						// [-]
 extern int yd_nano, pos_ref_nano;		// [nm]
 
@@ -23,7 +25,7 @@ extern int yd_nano, pos_ref_nano;		// [nm]
 **	INP:	pos_ref_org	: original step reference
 **	OUT:	pos_ref_sh	: shaped step reference
 */
-void ctrl_motion_lpf1(float pos_ref_org, float *pos_ref_sh);
+void ctrl_motion_lpf(float pos_ref_org, float *pos_ref_sh);
 
 
 /*	PLANT SHAPING FILTER
@@ -32,7 +34,7 @@ void ctrl_motion_lpf1(float pos_ref_org, float *pos_ref_sh);
 **	INP:	u_org	: original current reference
 **	OUT:	u_sh	: shaped current reference
 */
-void ctrl_motion_sh1(float u_org, float *u_sh);
+void ctrl_motion_shp(float u_org, float *u_sh);
 
 
 /*	PID POSITION CTRL
@@ -42,7 +44,8 @@ void ctrl_motion_sh1(float u_org, float *u_sh);
 **			x_msr	: measured position
 **	OUT:	iq_ref	: calculated current reference
 */
-void ctrl_motion_pid_nano(int x_ref, int x_msr, float *iq_ref);
+void ctrl_motion_vpi(float v_ref, float v_msr, float *i_ref);
+//void ctrl_motion_pid_nano(int x_ref, int x_msr, float *iq_ref);
 
 
 /*	RESET CONTROL MODULE

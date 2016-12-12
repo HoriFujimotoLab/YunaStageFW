@@ -9,7 +9,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 #define	SYSTEM_MATH_H
 
 #include "c67x_fastmath.h"
-#include "c67x_dsplib.h"
+//#include "c67x_dsplib.h"
 
 /*	STATE-SPACE STATE-EQUATION
 **	--------------------------
@@ -41,7 +41,7 @@ void vec_add(float *x, float *y, float *r, int nr);
 void vec_mul(float *x, float *y, float *r, int nr);
 void vec_scale(float *x, float *w, float *r, int nr);
 void vec_dot(float *x, float *y, float *r, int nr);
-
+void mat_mul(float *x, int r1, int c1, float *y, int c2, float *r);
 
 /* PRECALC MATH CONST
 ** ------------------
@@ -53,8 +53,8 @@ void vec_dot(float *x, float *y, float *r, int nr);
 #define	C_SQRT1_2	((double)0.70710678118654752440084436210485)	// (1/2)^0.5
 #define	C_SQRT2_3	((double)0.81649658092772603273242802490196)	// (2/3)^0.5
 #define	C_SQRT3_2	((double)1.2247448713915890490986420373529)		// (3/2)^0.5
-#define	PI(n)	(3.14159265358979323846 * (n))
-#define	sign(a) (((a)<0) ? -1 : ((a)>0))
+#define	PI(n)		(3.14159265358979323846 * (n))
+#define	sign(a)		(((a)<0) ? -1 : ((a)>0))
 
 
 #endif
