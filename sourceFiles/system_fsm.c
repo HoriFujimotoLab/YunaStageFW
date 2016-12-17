@@ -42,8 +42,8 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 //global
 enum mode sysmode_e = SYS_STP;
 int msr = -1, cnt = 0;					// measurement counters
-float time = 0.0;
-float iq_home = 5.2;
+int time = 0;
+float v_home = -18;
 // local
 int din, don, err = 0;
 int firmerr = 0, senserr = 0;
@@ -77,20 +77,23 @@ void system_fsm_mode(void)
 		if (OIL_SW == (din & OIL_SW)) { don = don | OIL_DO; }					// oil pump on
 		if (LCF_SW == (din & LCF_SW)) { don = don | LCF_DO; }					// lc filter on
 		if (HOM_SW == (din & HOM_SW)) { system_fsm_home(); }
-		if (HOM_SW != (din & HOM_SW)) { iq_ref = 0.0; }
+		if (HOM_SW != (din & HOM_SW)) { v_ref = 0.0; ctrl_motion_reset(1); }
 		pev_pio_out(PEV_BDN, don);												// switch relays
 		if (err != 0) {															// error detected	
 			pev_inverter_stop_pwm(PEV_BDN, INV_CH); sysmode_e = SYS_ERR; }		// error mode change
 		if (INI_SW != (din & INI_SW)) {											// ini switch off
 			system_fsm_reset();													// reset firmware
 			pev_inverter_stop_pwm(PEV_BDN, INV_CH); sysmode_e = SYS_STP; }		// revert to stp mode
-		if (RUN_SW == (din & RUN_SW)) {				sysmode_e = SYS_RUN; }		// run switch on
+		if (RUN_SW == (din & RUN_SW)) {				
+			ctrl_motion_reset(1);
+			sysmode_e = SYS_RUN; 
+		}
 		break;
 
 	case SYS_RUN:
 		system_fsm_err();														// check for errors
-		if (OIL_SW == (din & OIL_SW)) { don = don | OIL_DO; }					// oil pump on
-		if (LCF_SW == (din & LCF_SW)) { don = don | LCF_DO; }					// lc filter on
+		//if (OIL_SW == (din & OIL_SW)) { don = don | OIL_DO; }					// oil pump on
+		//if (LCF_SW == (din & LCF_SW)) { don = don | LCF_DO; }					// lc filter on
 		pev_pio_out(PEV_BDN, don);												// switch relays
 		if (err != 0) {															// error detected
 			pev_inverter_stop_pwm(PEV_BDN, INV_CH); sysmode_e = SYS_ERR; }		// error mode change
@@ -139,8 +142,9 @@ void system_fsm_err(void)
 void system_fsm_reset(void)
 {
 	ctrl_current_reset();
-	ctrl_motion_reset();
+	ctrl_motion_reset(100);
 	Aref = 0.0;
+	calib = 0;
 }
 
 
@@ -153,15 +157,15 @@ void system_fsm_init(void)
 
 void system_fsm_home(void)
 {
-	if (home_ad < 0.5 && calib == 0) { iq_ref = +iq_home; }
-	if (home_ad > 0.5 && calib == 0) { iq_ref = -iq_home;
+	if (home_ad < 0.5 && calib == 0) { v_ref = +v_home; }
+	if (home_ad > 0.5 && calib == 0) { v_ref = -v_home;
 		hardw_lin_home(); 
 		hardw_menc_home(); 
 		hardw_senc_home(); 
 		calib = 1; 
 	}
-	if (pos_t < 0.0 && calib == 1)	 { iq_ref = -iq_home; }
-	if (pos_t > 0.5 && calib == 1)   { iq_ref = +iq_home; }
+	if (pos_t < 0.0 && calib == 1)	 { v_ref = -v_home; }
+	if (pos_t > 0.5 && calib == 1)   { v_ref = +v_home; }
 }
 
 

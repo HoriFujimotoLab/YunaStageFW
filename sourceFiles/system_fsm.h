@@ -16,8 +16,8 @@ extern enum mode {
 	SYS_ERR = 0x0f				// LED (1111)
 } sysmode_e;
 extern int msr, cnt;			// measurement counters
-extern float iq_home;
-extern float time;
+extern float v_home;
+extern int time;
 
 #include	"system_math.h"
 #include	"data/system_data.h"
@@ -40,6 +40,7 @@ extern float time;
 **	DES:	include the required control modules headers
 **			necessary for the particular experiment configuration
 */
+#include	"ctrl_friction.h"
 #include	"ctrl_current.h"
 #include	"ctrl_motion.h"
 #include	"ctrl_traject.h"

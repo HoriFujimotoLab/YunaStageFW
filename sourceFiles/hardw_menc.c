@@ -21,7 +21,9 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 
 // MODULE VAR
 // global
-float theta_m = 0.0, theta_e, omega_m = 0.0;
+float theta_m = 0.0, theta_mo = 0.0;
+float theta_h = 0.0;
+float theta_e, omega_m = 0.0;
 int theta_m_nano = 0, omega_m_nano = 0;
 
 // local

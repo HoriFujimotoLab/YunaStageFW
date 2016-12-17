@@ -10,8 +10,11 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #define	HARDW_MENC_H
 
 // MODULE VAR
-extern float theta_m, theta_e, omega_m;
+extern float theta_m, theta_mo;
+extern float theta_h;
+extern float theta_e, omega_m;
 extern int theta_m_nano, omega_m_nano;
+
 
 /*	INIT ENCODER & BOARD
 **	--------------------
