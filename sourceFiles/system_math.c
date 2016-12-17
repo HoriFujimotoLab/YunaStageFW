@@ -7,7 +7,7 @@ Author:		Thomas Beauduin, University of Tokyo, 2016
 *************************************************************************************/
 #include "system_math.h"
 
-#define	NMAX	(2)					// max amount of states
+#define	NMAX	(4)					// max amount of states
 
 void math_state(float A[], float x[], float B[], float u[], float *dx, int nrofs, int nrofi)
 {

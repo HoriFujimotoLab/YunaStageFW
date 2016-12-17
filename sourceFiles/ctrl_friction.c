@@ -30,7 +30,7 @@ void ctrl_friction_stribeck(float theta_m, float theta_h, float *theta_mo)
 	tfric += (TS*1.0e-6);
 	if (tfric > timevec[vel] && rtn == 0)		 { state = 1; }		// return moment
 	if (tfric < timevec[vel] && rtn == 0)		 { state = 2; }		// constant vel
-	if (rtn == 1)							 { state = 3; }		// return step
+	if (rtn == 1)								 { state = 3; }		// return step
 	if (theta_m < theta_h + 0.1 && theta_m > theta_h - 0.1 && rtn == 1) { state = 4; }		// start vel
 	switch (state)
 	{
@@ -49,13 +49,13 @@ void ctrl_friction_stribeck(float theta_m, float theta_h, float *theta_mo)
 	}
 }
 
-/*
+
 void ctrl_friction_hyster(float theta_m, float theta_h)
 {
 	ctrl_traject_ref(reftype_e, Aref, Fref, &r_lpf);
 	ctrl_traject_lpf(r_lpf, &p_ref);
 	ctrl_motion_ppi(r_lpf, theta_m, theta_h, &v_ref);
 }
-*/
+
 
 // consider making friction ref functions here

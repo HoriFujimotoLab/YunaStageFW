@@ -71,14 +71,18 @@ void system_tint0(void)
 	}
 	if (sysmode_e == SYS_RUN) {
 		if (msr >= 0 && msr < nroft) {
-			ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
-			//ctrl_friction_hyster(theta_m, theta_h);
+			//ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
+			ctrl_friction_hyster(theta_m, theta_h);
 			//ctrl_traject_ref(reftype_e, Aref, Fref, &r_lpf);
 			//ctrl_traject_lpf(r_lpf, &p_ref);
 			//ctrl_motion_ppi(r_lpf, theta_m, theta_h, &v_ref);
 			msr++;
 		}
-		else { v_ref = 0.0; ctrl_motion_reset(3); }
+		else { 
+			v_ref = 0.0; 
+			ctrl_motion_reset(3); 
+			ctrl_traject_reset();
+		}
 
 		// CONTROL
 		ctrl_motion_dob(iq_ref, omega_m, &iq_dob);

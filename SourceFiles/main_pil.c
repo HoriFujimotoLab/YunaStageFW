@@ -14,27 +14,27 @@ Author:		Thomas Beauduin, University of Tokyo, 2015
 float t0 = 0.0, t0_a = 0.0;
 
 // TEMP
-float A[2][2] = { { 1.0, 2.0 },{ 3.0, 4.0 } };
-float B[2][1] = { { 3.0 },{ 4.0 } };
-float C[1][2] = { { 5.0, 2.0 } };
+float A[3][3] = { { 1.0, 2.0, 3.0 },{ 3.0, 4.0, 5.0 },{ 6.0, 7.0, 8.0 } };
+float B[3][1] = { { 3.0 },{ 4.0 },{ 5.0 } };
+float C[1][3] = { { 5.0, 2.0, 1.0 } };
 float D[1][1] = { { 1.0 } };
 
 float u[1] = { 5.0 };
 float v[1] = { 5.0 };
-float x[2] = { 2.0, 7.0 };
-float y[2] = { 0.0 };
+float x[3] = { 2.0, 7.0, 1.0 };
+float y[3] = { 0.0 };
 
 float z[1] = { 2.0 };
 float Cx[4] = { 0.0 };
 float Du[4] = { 0.0 };
-float Ax[2] = { 0.0 };
+float Ax[3] = { 0.0 };
 
 float T[2][2] = {0.0};
 
-int nrofs = 2;
+int nrofs = 3;
 int nrofi = 1;
 int nrofo = 1;
-float r = 0.0;
+float r = 2.0;
 
 float test1 = 0.0;
 float test2 = 0.0;
@@ -74,19 +74,17 @@ void main(void)
 
 void system_tint0(void)
 {
+	time += (TS*1.0e-6);
 	// TEST CODE
 	// ---------
 	if (msr >= 0 && msr < nroft) {
 
-		mat_mul(A[0], 2, 2, x, 1, Ax);
+		ctrl_motion_dob(iq_ref, omega_m, &iq_dob);
+		//mat_mul(A[0], 3, 3, x, 1, Ax);
 
-		math_state(A[0], x, B[0], u, y, nrofs, nrofi);
-		//ctrl_math_state2(A[0], x, B[0], u, y, nrofs, nrofi);
+		//math_state(A[0], x, B[0], u, y, nrofs, nrofi);
+		//math_output(C[0], x, D[0], u, z, nrofs, nrofi, nrofo);
 
-		math_output(C[0], x, D[0], u, z, nrofs, nrofi, nrofo);
-		//ctrl_math_output2(C[0], x, D[0], u, y, nrofs, nrofi, nrofo);
-
-		time += (TS*1.0e-6);
 		msr++;
 	}
 
@@ -96,7 +94,7 @@ void system_tint0(void)
 	t0_a = ALPHA * (t0 * 17.7777e-3) + (1 - ALPHA) * t0_a;
 	//if (msr >= 0 && msr < nroft) { msr++; }
 
-	test1 = y[0];
+	//test1 = y[0];
 	test2 = y[1];
 	test3 = Ax[0];
 	test4 = Ax[1];
