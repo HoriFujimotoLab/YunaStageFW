@@ -1,8 +1,8 @@
 [COMPONENT]
-LIB	"c67x_dsplib.lib" "c67x_fastmath.lib"	# "c67x_fastmath.lib" "dsplib.lib":Thu Sep 15 10:31:38 2016
+LIB	"c67x_fastmath.lib"	# "c67x_dsplib.lib" "c67x_fastmath.lib":Mon Dec 12 23:19:20 2016
 OBJ	""	# Create:Sun Aug 28 23:08:40 2016
 HEADER	""	# Create:Sun Aug 28 23:08:40 2016
-SRC	"ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_dac.c" "hardw_lin.c" "hardw_pev.c" "main_pil.c" "system_fsm.c"	# "cblas_dgemv.c" "ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_dac.c" "hardw_lin.c" "hardw_pev.c" "main_pil.c" "system_fsm.c":Mon Sep 12 17:40:20 2016
+SRC	"ctrl_current.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_lin.c" "hardw_menc.c" "hardw_pev.c" "hardw_senc.c" "main_pil.c" "system_fsm.c" "system_math.c"	# "ctrl_current.c" "ctrl_math.c" "ctrl_motion.c" "ctrl_traject.c" "hardw_adc.c" "hardw_dac.c" "hardw_lin.c" "hardw_pev.c" "main_pil.c" "system_fsm.c":Mon Dec 12 22:27:26 2016
 [CONFIGURE]
 PEOS_VER	"1_17"	# Create:Sun Aug 28 23:08:40 2016
 PROTECT	"OFF"	# Create:Sun Aug 28 23:08:40 2016

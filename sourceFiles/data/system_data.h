@@ -19,6 +19,8 @@ Author:		Thomas Beauduin, Wataru Ohnishi
 #define		OVV_LIM	(380.0)					// overvorltage limit	[V]
 #define		OVS_LIM	(400.0)					// overspeed limit		[rad/s]
 #define		I_PK	(20.0)					// ctrl out saturation	[A]
+#define		V_PK	(200.0)					// ctrl out saturation	[A]
+#define		R		(1.9098593171)          // ball-screw lead
 
 // INV PAR
 #define		FC		(12500.0)				// carrier frequency	[Hz] : 12.5kHz->12500
@@ -26,8 +28,8 @@ Author:		Thomas Beauduin, Wataru Ohnishi
 #define		DT		(3500.0)	 			// inv dead time		[ns]
 
 // STAGE PAR
-#define		FS		(2000.0)	    		// system frequency		[Hz]
-#define		TS		(500.0)   				// system sampling		[us]
+#define		FS		(2500.0)	    		// system frequency		[Hz]
+#define		TS		(400.0)   				// system sampling		[us]
 
 
 #endif

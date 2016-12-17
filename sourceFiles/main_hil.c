@@ -9,10 +9,11 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #include	"system_fsm.h"
 
 void system_init(void);
-//interrupt void system_tint0(void);
+interrupt void system_tint0(void);
 interrupt void system_cint5(void);
 
-float test = 0.0;
+int test = 0;
+
 
 void main(void)
 {
@@ -27,25 +28,8 @@ void main(void)
 
 void system_cint5(void)
 {
-	time = time + TC;
-
 	// SENSOR READ
 	hardw_adc_read(0, &vdc_ad, &idc_ad, &iu_ad, &iw_ad);
-	hardw_adc_read(1, &load_m, &load_s, &acc_mx, &acc_tx);
-	hardw_lin_read(&pos_t_nano, &pos_t, &vel_t_nano, &vel_t);
-	hardw_senc_read(&theta_s_nano, &theta_s, &omega_s_nano, &omega_s);
-	hardw_menc_read(&theta_m_nano, &theta_m, &omega_m_nano, &omega_m, &theta_e);
-
-	// REFERENCE GENERATION
-	if (sysmode_e == SYS_STP) {}
-	if (sysmode_e == SYS_INI) {}
-	if (sysmode_e == SYS_RUN) {
-		if (msr >= 0 && msr < nroft) {
-			ctrl_traject_ref(reftype_e, Aref, Fref, &iq_ref);
-			msr++;
-		}
-		else { iq_ref = 0.0; }
-	}
 
 	// CURRENT CONTROL
 	if (sysmode_e == SYS_INI || sysmode_e == SYS_RUN)
@@ -61,35 +45,57 @@ void system_cint5(void)
 	else {
 		hardw_inv_pwm(0, 0, 0, vdc_ad);
 	}
-	watch_data_8ch();
 }
 
-/*
+
 void system_tint0(void)
 {
 	unsigned int regs[2];
 
 	// SENSOR READ
-//	hardw_lin_read(BDN0, &pos_m_nano, &pos_m, &vel_m, &vel_ma);
-//	hardw_lin_read(BDN1, &pos_l_nano, &pos_l, &vel_l, &vel_la);
-//	hardw_lin_imag(pos_m, pos_l, Lm_i, &pos_i);
-//	hardw_lin_imag(vel_m, vel_l, Lm_i, &vel_i);
-//	hardw_lin_elec(pos_m, &theta_e);
+	hardw_adc_read(1, &load_m, &load_s, &acc_mx, &acc_tx);
+	hardw_lin_read(&pos_t_nano, &pos_t, &vel_t_nano, &vel_t);
+	//hardw_senc_read(&theta_s_nano, &theta_s, &omega_s_nano, &omega_s);
+	hardw_menc_read(&theta_m_nano, &theta_m, &omega_m_nano, &omega_m, &theta_e);
 
 	// MULTI-INT ON
 	regs[0] = CSR;
 	regs[1] = IRP;
 	int_enable();
 
+	// REFERENCE GENERATION
+	if (sysmode_e == SYS_STP) {}
+	if (sysmode_e == SYS_INI) { 
+		ctrl_motion_hom(v_ref, omega_m, &iq_ref);
+		theta_h = theta_m; 
+	}
+	if (sysmode_e == SYS_RUN) {
+		if (msr >= 0 && msr < nroft) {
+			ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
+			//ctrl_friction_hyster(theta_m, theta_h);
+			//ctrl_traject_ref(reftype_e, Aref, Fref, &r_lpf);
+			//ctrl_traject_lpf(r_lpf, &p_ref);
+			//ctrl_motion_ppi(r_lpf, theta_m, theta_h, &v_ref);
+			msr++;
+		}
+		else { v_ref = 0.0; ctrl_motion_reset(3); }
 
+		// CONTROL
+		ctrl_motion_dob(iq_ref, omega_m, &iq_dob);
+		ctrl_motion_vpi(v_ref, omega_m, &i_shp);
+		ctrl_motion_shp(i_shp, &iq_ref);
+		
+	}
+	
 	// MULTI-INT OFF
 	int_disable();
 	CSR = regs[0];
 	IRP = regs[1];
 
-	//watch_data_8ch();
+	watch_data_8ch();
+	time++;
 }
-*/
+
 
 void system_init(void)
 {
@@ -97,26 +103,27 @@ void system_init(void)
 	watch_init();
 	hardw_pev_init();
 	hardw_adc_init();
-	hardw_lin_init(FC, 500);
-	hardw_menc_init(FC, 500);
-	hardw_senc_init(FC, 500);
+	hardw_lin_init(FS, 300);
+	hardw_menc_init(FS, 300);
+	hardw_senc_init(FS, 300);
 
 	// DRIVE CTRL
 	int5_init_vector(system_cint5);
 	hardw_inv_init();
 	int5_enable_int();
 
-	/*
 	// MOTION CTRL
 	timer0_init(TS);
 	timer0_init_vector(system_tint0);
 	timer0_start();
 	timer0_enable_int();
-	*/
-
 	system_fsm_init();
 }
 
+/*
+** NOTES
+** -----
 
+*/
 
 

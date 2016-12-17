@@ -25,6 +25,7 @@ SECTIONS
 	.const		>		FLASHRAM		/* initialized global var 				*/
 	.switch		>		FLASHRAM		/* jump table of switch statements 		*/
 	.text		>		FLASHRAM		/* executable code (.out) 				*/
+	text		>		FLASHRAM		/* required with fastmath67x.lib 		*/
 	.data		>		FLASHRAM		/* required with fastmath67x.lib 		*/
 	.stack		>		BSS				/* system var stack 					*/
 	.bss		>		BSS				/* global var 							*/

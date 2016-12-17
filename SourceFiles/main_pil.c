@@ -16,29 +16,30 @@ float t0 = 0.0, t0_a = 0.0;
 // TEMP
 float A[2][2] = { { 1.0, 2.0 },{ 3.0, 4.0 } };
 float B[2][1] = { { 3.0 },{ 4.0 } };
-float C[2][2] = { { 5.0, 2.0 },{ 1.0, 2.0 } };
-float D[2][2] = { { 2.0, 1.0 },{ 3.0, 0.5 } };
+float C[1][2] = { { 5.0, 2.0 } };
+float D[1][1] = { { 1.0 } };
 
-float u[2] = { 5.0, 3.0 };
+float u[1] = { 5.0 };
 float v[1] = { 5.0 };
 float x[2] = { 2.0, 7.0 };
 float y[2] = { 0.0 };
-float z[2] = { 2.0, 3.0 };
+
+float z[1] = { 2.0 };
 float Cx[4] = { 0.0 };
 float Du[4] = { 0.0 };
+float Ax[2] = { 0.0 };
 
 float T[2][2] = {0.0};
 
 int nrofs = 2;
-int nrofi = 2;
-int nrofo = 2;
+int nrofi = 1;
+int nrofo = 1;
 float r = 0.0;
 
 float test1 = 0.0;
 float test2 = 0.0;
 float test3 = 0.0;
 float test4 = 0.0;
-float time = 0.0;
 
 interrupt void system_tint0(void);
 
@@ -77,10 +78,12 @@ void system_tint0(void)
 	// ---------
 	if (msr >= 0 && msr < nroft) {
 
-		ctrl_math_state(A[0], x, B[0], u, y, nrofs, nrofi);
+		mat_mul(A[0], 2, 2, x, 1, Ax);
+
+		math_state(A[0], x, B[0], u, y, nrofs, nrofi);
 		//ctrl_math_state2(A[0], x, B[0], u, y, nrofs, nrofi);
 
-		//ctrl_math_output(C[0], x, D[0], u, y, nrofs, nrofi, nrofo);
+		math_output(C[0], x, D[0], u, z, nrofs, nrofi, nrofo);
 		//ctrl_math_output2(C[0], x, D[0], u, y, nrofs, nrofi, nrofo);
 
 		time += (TS*1.0e-6);
@@ -95,8 +98,8 @@ void system_tint0(void)
 
 	test1 = y[0];
 	test2 = y[1];
-	test3 = Du[0];
-	test4 = Cx[1];
+	test3 = Ax[0];
+	test4 = Ax[1];
 
 	watch_data_8ch();
 }

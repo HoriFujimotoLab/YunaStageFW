@@ -1,13 +1,14 @@
-EXTLIBS	+= c67x_dsplib.lib c67x_fastmath.lib
+EXTLIBS	+= c67x_fastmath.lib
 EXOBJS	+= 
-OBJS	+= ctrl_current.obj ctrl_math.obj ctrl_motion.obj ctrl_traject.obj hardw_adc.obj hardw_dac.obj hardw_lin.obj hardw_pev.obj main_pil.obj system_fsm.obj
+OBJS	+= ctrl_current.obj ctrl_motion.obj ctrl_traject.obj hardw_adc.obj hardw_lin.obj hardw_menc.obj hardw_pev.obj hardw_senc.obj main_pil.obj system_fsm.obj system_math.obj
 ctrl_current.obj: 
-ctrl_math.obj: 
 ctrl_motion.obj: 
 ctrl_traject.obj: 
 hardw_adc.obj: 
-hardw_dac.obj: 
 hardw_lin.obj: 
+hardw_menc.obj: 
 hardw_pev.obj: 
+hardw_senc.obj: 
 main_pil.obj: 
 system_fsm.obj: 
+system_math.obj: 

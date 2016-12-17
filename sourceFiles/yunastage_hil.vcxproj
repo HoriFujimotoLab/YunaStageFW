@@ -144,14 +144,17 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ctrl_design.c" />
-    <ClCompile Include="ctrl_math.c" />
+    <ClCompile Include="ctrl_friction.c" />
+    <ClCompile Include="system_math.c" />
     <ClCompile Include="ctrl_current.c" />
     <ClCompile Include="ctrl_traject.c" />
     <ClCompile Include="ctrl_motion.c" />
     <ClCompile Include="hardw_adc.c" />
+    <ClCompile Include="hardw_menc.c" />
     <ClCompile Include="hardw_pev.c" />
     <ClCompile Include="hardw_dac.c" />
     <ClCompile Include="hardw_lin.c" />
+    <ClCompile Include="hardw_senc.c" />
     <ClCompile Include="main_hil.c" />
     <ClCompile Include="system_fsm.c" />
   </ItemGroup>
@@ -159,17 +162,23 @@
     <ClInclude Include="c67x_dsplib.h" />
     <ClInclude Include="c67x_fastmath.h" />
     <ClInclude Include="ctrl_design.h" />
-    <ClInclude Include="ctrl_math.h" />
+    <ClInclude Include="ctrl_friction.h" />
+    <ClInclude Include="data\ctrl_friction_ref.h" />
+    <ClInclude Include="data\ctrl_traject_par.h" />
+    <ClInclude Include="data\system_data.h" />
+    <ClInclude Include="system_math.h" />
     <ClInclude Include="ctrl_current.h" />
     <ClInclude Include="ctrl_traject.h" />
     <ClInclude Include="data\ctrl_current_par.h" />
     <ClInclude Include="data\ctrl_motion_par.h" />
     <ClInclude Include="ctrl_motion.h" />
+    <ClInclude Include="data\Rfreqref.h" />
     <ClInclude Include="hardw_dac.h" />
+    <ClInclude Include="hardw_menc.h" />
     <ClInclude Include="hardw_pev.h" />
     <ClInclude Include="hardw_adc.h" />
     <ClInclude Include="hardw_lin.h" />
-    <ClInclude Include="system_data.h" />
+    <ClInclude Include="hardw_senc.h" />
     <ClInclude Include="system_fsm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
