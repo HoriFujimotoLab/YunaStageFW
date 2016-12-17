@@ -82,14 +82,14 @@ void vec_dot(float *x, float *y, float *r, int nr)
 
 
 // temp
-void mat_mul(float a[], int row_a, int col_a, float b[], int col_b, float *c)
+void mat_mul(float *x, int r1, int c1, float *y, int c2, float *r)
 {
 	int i, k;
 	float sum;
-	for (i = 0; i < row_a; i++) {
+	for (i = 0; i < r1; i++) {
 		sum = 0.0;
-		for (k = 0; k < col_a; k++) { sum += a[i*col_a + k] * b[k]; }
-		c[i] = sum;
+		for (k = 0; k < c1; k++) { sum += x[i*c1 + k] * y[k]; }
+		r[i] = sum;
 	}
 }
 
