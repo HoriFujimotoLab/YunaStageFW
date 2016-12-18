@@ -65,7 +65,7 @@ void ctrl_motion_dob(float i_ref, float v_msr, float *i_dob)
 	float ir[1] = { 0.0 };
 	float i1[1] = { 0.0 };
 	float i2[1] = { 0.0 };
-	vm[0] = -v_msr;
+	vm[0] = v_msr;
 	math_output(Cdob[0], xdob, Ddob[0], vm, i1, 2, 1, 1);
 	math_state(Adob[0], xdob, Bdob[0], vm, xdob, 2, 1);
 	ir[0] = i_ref;
@@ -88,7 +88,6 @@ void ctrl_motion_reset(int ctrltype_e)
 	default:
 		xhom[0] = 0.0;
 		xlpf[0] = 0.0; xlpf[1] = 0.0;
-		//xlpf[2] = 0.0; //xlpf[3] = 0.0;
 		xvpi[0] = 0.0; xppi[0] = 0.0;
 		xshp[0] = 0.0; xshp[1] = 0.0;		break;
 	}

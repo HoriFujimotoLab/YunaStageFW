@@ -29,7 +29,7 @@ extern enum ctrl {
 **	INP:	pos_ref_org	: original step reference
 **	OUT:	pos_ref_sh	: shaped step reference
 */
-//void ctrl_motion_lpf(float pos_ref_org, float *pos_ref_sh);
+void ctrl_motion_lpf(float u_org, float *u_lpf);
 void ctrl_motion_dob(float i_ref, float v_msr, float *i_dob);
 
 /*	PLANT SHAPING FILTER

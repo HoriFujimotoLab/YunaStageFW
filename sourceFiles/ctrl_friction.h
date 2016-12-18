@@ -17,7 +17,7 @@ extern float Afric;
 **	----------
 **	DES:	
 */
-void ctrl_friction_stribeck(float theta_m, float theta_h, float *theta_mo);
+void ctrl_friction_stribeck(float xm, float xh, float *xo);
 void ctrl_friction_hyster(float theta_m, float theta_h);
 
 

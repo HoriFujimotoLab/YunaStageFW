@@ -71,16 +71,13 @@ void system_tint0(void)
 	}
 	if (sysmode_e == SYS_RUN) {
 		if (msr >= 0 && msr < nroft) {
-			//ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
-			ctrl_friction_hyster(theta_m, theta_h);
-			//ctrl_traject_ref(reftype_e, Aref, Fref, &r_lpf);
-			//ctrl_traject_lpf(r_lpf, &p_ref);
-			//ctrl_motion_ppi(r_lpf, theta_m, theta_h, &v_ref);
+			ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
+			//ctrl_friction_hyster(theta_m, theta_h);
 			msr++;
 		}
 		else { 
 			v_ref = 0.0; 
-			ctrl_motion_reset(3); 
+			ctrl_motion_reset(3);
 			ctrl_traject_reset();
 		}
 
@@ -107,9 +104,9 @@ void system_init(void)
 	watch_init();
 	hardw_pev_init();
 	hardw_adc_init();
-	hardw_lin_init(FS, 300);
-	hardw_menc_init(FS, 300);
-	hardw_senc_init(FS, 300);
+	hardw_lin_init(FS, 500);
+	hardw_menc_init(FS, 500);
+	hardw_senc_init(FS, 500);
 
 	// DRIVE CTRL
 	int5_init_vector(system_cint5);
