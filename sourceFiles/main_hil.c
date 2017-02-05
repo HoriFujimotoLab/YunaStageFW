@@ -72,7 +72,8 @@ void system_tint0(void)
 	if (sysmode_e == SYS_RUN) {
 		if (msr >= 0 && msr < nroft) {
 			//ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
-			ctrl_friction_hyster(theta_m, theta_h);
+			//ctrl_friction_hyster(theta_m, theta_h);
+			ctrl_friction_lag(theta_m, theta_h, &theta_mo);
 			msr++;
 		}
 		else { 

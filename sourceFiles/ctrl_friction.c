@@ -10,7 +10,7 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 #include	"ctrl_traject.h"
 #include	"system_math.h"
 #include	"data/system_data.h"
-#include	"data/ctrl_friction_ref.h"
+#include	"data/ctrl_lag_ref.h"
 
 // MODULE VAR
 // Global: reference generation
@@ -50,12 +50,12 @@ void ctrl_friction_reset(void);
 void ctrl_friction_stribeck(float xm, float xh, float *xo)
 {
 	tfric += (TS*1.0e-6);
-	if (tfric < timevec[vel] && rtn == 0)				// phase 1: constant vel ctrl
+	if (tfric < 1.2*timevec[vel] && rtn == 0)				// phase 1: constant vel ctrl
 	{
 		ctrl_friction_vlpf(Afric*velvec[vel], &v_ref);
 		*xo = xm; vo = v_ref;
 	}
-	if (tfric > timevec[vel] && rtn == 0)				// phase 2: switch to pos ctrl
+	if (tfric > 1.2*timevec[vel] && rtn == 0)				// phase 2: switch to pos ctrl
 	{
 		rtn = 1;
 		ctrl_friction_reset();	//lpf-vel
@@ -77,16 +77,18 @@ void ctrl_friction_stribeck(float xm, float xh, float *xo)
 	}
 }
 
-/*
+
 void ctrl_friction_lag(float xm, float xh, float *xo)
 {
+	float vr;
 	tfric += (TS*1.0e-6);
-	if (tfric < time_ref && rtn == 0)				// phase 1: constant vel ctrl
+	if (tfric < 2.75*timevec[vel] && rtn == 0)				// phase 1: constant vel ctrl
 	{
-		ctrl_friction_vlpf(Afric, &v_ref);
+		vr = velvec[vel] + Afric*velvec[vel]*sindp(Fref*PI(2)*tfric);
+		ctrl_friction_vlpf(vr, &v_ref);
 		*xo = xm; vo = v_ref;
 	}
-	if (tfric > time_ref && rtn == 0)				// phase 2: switch to pos ctrl
+	if (tfric > 2.75*timevec[vel] && rtn == 0)				// phase 2: switch to pos ctrl
 	{
 		rtn = 1;
 		ctrl_friction_reset();	//lpf-vel
@@ -107,7 +109,7 @@ void ctrl_friction_lag(float xm, float xh, float *xo)
 		else { vel = 0; }
 	}
 }
-*/
+
 
 // PPI: 10Hz, zeta 1.2/sqrt(2)
 // VPI: 50Hz, zeta 1.2/sqrt(2)
