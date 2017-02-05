@@ -8,7 +8,6 @@ Author:		Thomas Beauduin, University of Tokyo, December 2016
 *************************************************************************************/
 #include	"hardw_lin.h"
 #include	"system_math.h"
-#include	"data/system_data.h"
 #include	<mwio3.h>
 
 // FPGA ADDR

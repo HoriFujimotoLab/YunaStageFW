@@ -54,8 +54,8 @@ void system_tint0(void)
 
 	// SENSOR READ
 	hardw_adc_read(1, &load_m, &load_s, &acc_mx, &acc_tx);
+	load = load_m - load_s;
 	hardw_lin_read(&pos_t_nano, &pos_t, &vel_t_nano, &vel_t);
-	//hardw_senc_read(&theta_s_nano, &theta_s, &omega_s_nano, &omega_s);
 	hardw_menc_read(&theta_m_nano, &theta_m, &omega_m_nano, &omega_m, &theta_e);
 
 	// MULTI-INT ON
@@ -67,12 +67,12 @@ void system_tint0(void)
 	if (sysmode_e == SYS_STP) {}
 	if (sysmode_e == SYS_INI) { 
 		ctrl_motion_hom(v_ref, omega_m, &iq_ref);
-		theta_h = theta_m; 
+		theta_h = theta_m;
 	}
 	if (sysmode_e == SYS_RUN) {
 		if (msr >= 0 && msr < nroft) {
-			ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
-			//ctrl_friction_hyster(theta_m, theta_h);
+			//ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
+			ctrl_friction_hyster(theta_m, theta_h);
 			msr++;
 		}
 		else { 
@@ -85,7 +85,7 @@ void system_tint0(void)
 		ctrl_motion_dob(iq_ref, omega_m, &iq_dob);
 		ctrl_motion_vpi(v_ref, omega_m, &i_shp);
 		ctrl_motion_shp(i_shp, &iq_ref);
-		
+		//iq_ref += iq_dob;
 	}
 	
 	// MULTI-INT OFF

@@ -17,7 +17,7 @@ extern float vd_ad, vq_ad, id_ad, iq_ad;
 extern float vdc_ad, idc_ad;
 // sensor level
 extern float disp_s1, disp_s2, disp_m1, disp_m2;
-extern float load_m, load_s, servo_ad, temp_s;
+extern float load_m, load_s, load, servo_ad, temp_s;
 extern float acc_mx, acc_tx, acc_tz, acc_sx;
 
 

@@ -165,6 +165,7 @@
     <ClInclude Include="ctrl_friction.h" />
     <ClInclude Include="data\ctrl_friction_ref.h" />
     <ClInclude Include="data\ctrl_traject_par.h" />
+    <ClInclude Include="data\Rsawtooth.h" />
     <ClInclude Include="data\system_data.h" />
     <ClInclude Include="system_math.h" />
     <ClInclude Include="ctrl_current.h" />

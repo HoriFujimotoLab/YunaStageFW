@@ -161,7 +161,7 @@ void system_fsm_home(void)
 	if (home_ad > 0.5 && calib == 0) { v_ref = -v_home;
 		hardw_lin_home(); 
 		hardw_menc_home(); 
-		hardw_senc_home(); 
+		hardw_senc_home();
 		calib = 1; 
 	}
 	if (pos_t < 0.0 && calib == 1)	 { v_ref = -v_home; }

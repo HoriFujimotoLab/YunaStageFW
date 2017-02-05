@@ -44,7 +44,9 @@ float	xvlpf[2] = { 0.0e+00,0.0e+00 };
 void ctrl_friction_vlpf(float u_org, float *u_lpf);
 void ctrl_friction_reset(void);
 
-
+// PPI: 2Hz, zeta 1.2/sqrt(2)
+// VPI: 20Hz, zeta 1.2/sqrt(2)
+// LPF: 0.75Hz, zeta 1
 void ctrl_friction_stribeck(float xm, float xh, float *xo)
 {
 	tfric += (TS*1.0e-6);
@@ -75,15 +77,46 @@ void ctrl_friction_stribeck(float xm, float xh, float *xo)
 	}
 }
 
+/*
+void ctrl_friction_lag(float xm, float xh, float *xo)
+{
+	tfric += (TS*1.0e-6);
+	if (tfric < time_ref && rtn == 0)				// phase 1: constant vel ctrl
+	{
+		ctrl_friction_vlpf(Afric, &v_ref);
+		*xo = xm; vo = v_ref;
+	}
+	if (tfric > time_ref && rtn == 0)				// phase 2: switch to pos ctrl
+	{
+		rtn = 1;
+		ctrl_friction_reset();	//lpf-vel
+	}
+	if (rtn == 1)										// phase 3: return to init pos
+	{
+		ctrl_traject_lpf(xh - *xo, &p_ref);
+		ctrl_motion_ppi(p_ref, xm, *xo, &v_ref);
+		v_ref = v_ref + vo;
+	}
+	if (xm < xh + res && xm > xh - res && rtn == 1)		// phase 4: switch to vel ctrl
+	{
+		tfric = 0.0; rtn = 0; v_ref = 0.0;
+		ctrl_traject_reset();	// lpf-pos
+		ctrl_motion_reset(3);	// vpi
+		ctrl_motion_reset(4);	// ppi
+		if (vel < (NROFS - 1)) { vel++; }
+		else { vel = 0; }
+	}
+}
+*/
 
-// PPI: 4Hz, zeta 1.2/sqrt(2)
-// VPI: 40Hz, zeta 1.2/sqrt(2)
-// LPF: 0.75Hz, zeta 1
+// PPI: 10Hz, zeta 1.2/sqrt(2)
+// VPI: 50Hz, zeta 1.2/sqrt(2)
+// LPF: 50Hz, zeta 1
 void ctrl_friction_hyster(float theta_m, float theta_h)
 {
 	ctrl_traject_ref(reftype_e, Aref, Fref, &r_lpf);
 	ctrl_traject_lpf(r_lpf, &p_ref);
-	ctrl_motion_ppi(r_lpf, theta_m, theta_h, &v_ref);
+	ctrl_motion_ppi(p_ref, theta_m, theta_h, &v_ref);
 }
 
 
@@ -94,6 +127,7 @@ void ctrl_friction_vlpf(float u_org, float *u_lpf)
 	math_output(Cvlpf[0], xvlpf, Dvlpf[0], u, u_lpf, 2, 1, 1);
 	math_state(Avlpf[0], xvlpf, Bvlpf[0], u, xvlpf, 2, 1);
 }
+
 
 void ctrl_friction_reset(void)
 {

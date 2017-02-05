@@ -8,8 +8,8 @@ Author:		Thomas Beauduin, University of Tokyo, 2016
 #include	"ctrl_traject.h"
 #include	"system_math.h"
 #include	"data/system_data.h"
-#include	"data/Rqlog1_250.h"
 #include	"data/ctrl_traject_par.h"
+#include	"data/Rsawtooth.h"
 
 // MODULE VAR
 // Global: reference generation

@@ -41,7 +41,7 @@ float vd_ad, vq_ad, id_ad, iq_ad;
 float vdc_ad, idc_ad;
 // sensor level
 float disp_s1, disp_s2, disp_m1, disp_m2;
-float load_m, load_s, servo_ad, temp_s;
+float load_m, load_s, load, servo_ad, temp_s;
 float acc_mx, acc_tx, acc_tz, acc_sx;
 // local
 float ad_avg[12] = { 0.0 };				// MW-ADC average offsets
