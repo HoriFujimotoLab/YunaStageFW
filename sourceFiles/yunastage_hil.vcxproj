@@ -163,8 +163,11 @@
     <ClInclude Include="c67x_fastmath.h" />
     <ClInclude Include="ctrl_design.h" />
     <ClInclude Include="ctrl_friction.h" />
-    <ClInclude Include="data\ctrl_friction_ref.h" />
+    <ClInclude Include="data\ctrl_lag_ref.h" />
+    <ClInclude Include="data\ctrl_stribeck_ref.h" />
     <ClInclude Include="data\ctrl_traject_par.h" />
+    <ClInclude Include="data\Rdrift.h" />
+    <ClInclude Include="data\Rgmsfric.h" />
     <ClInclude Include="data\Rsawtooth.h" />
     <ClInclude Include="data\system_data.h" />
     <ClInclude Include="system_math.h" />
@@ -173,7 +176,6 @@
     <ClInclude Include="data\ctrl_current_par.h" />
     <ClInclude Include="data\ctrl_motion_par.h" />
     <ClInclude Include="ctrl_motion.h" />
-    <ClInclude Include="data\Rfreqref.h" />
     <ClInclude Include="hardw_dac.h" />
     <ClInclude Include="hardw_menc.h" />
     <ClInclude Include="hardw_pev.h" />

@@ -129,9 +129,6 @@
     <ClInclude Include="hardw_senc.h">
       <Filter>Header Files\hardware</Filter>
     </ClInclude>
-    <ClInclude Include="data\Rfreqref.h">
-      <Filter>Resource Files\references</Filter>
-    </ClInclude>
     <ClInclude Include="system_math.h">
       <Filter>Header Files\system</Filter>
     </ClInclude>
@@ -144,7 +141,19 @@
     <ClInclude Include="data\ctrl_traject_par.h">
       <Filter>Resource Files\parameters</Filter>
     </ClInclude>
-    <ClInclude Include="data\ctrl_friction_ref.h">
+    <ClInclude Include="data\Rsawtooth.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="data\ctrl_lag_ref.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\ctrl_stribeck_ref.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rdrift.h">
+      <Filter>Resource Files\references</Filter>
+    </ClInclude>
+    <ClInclude Include="data\Rgmsfric.h">
       <Filter>Resource Files\references</Filter>
     </ClInclude>
   </ItemGroup>
