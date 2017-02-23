@@ -48,6 +48,26 @@ void ctrl_motion_ppi(float p_ref, float p_msr, float p_off, float *v_ref)
 	if (fabsf(*v_ref) > V_PK) { *v_ref = sign(*v_ref) * V_PK; }		// velocity limit
 }
 
+/*
+void ctrl_motion_pd(float p_ref, float p_msr, float p_off, float *i_ref)
+{
+	float p_err[1] = { 0.0 };
+	p_err[0] = p_off + p_ref - p_msr;
+	math_output(Cpd[0], xpd, Dpd[0], p_err, i_ref, 1, 1, 1);
+	math_state(Apd[0], xpd, Bpd[0], p_err, xpd, 1, 1);
+	if (fabsf(*i_ref) > I_PK) { *i_ref = sign(*i_ref) * I_PK; }
+}
+*/
+
+void ctrl_motion_pid(float p_ref, float p_msr, float p_off, float *i_ref)
+{
+	float p_err[1] = { 0.0 };
+	p_err[0] = p_off + p_ref - p_msr;
+	math_output(Cpid[0], xpid, Dpid[0], p_err, i_ref, 2, 1, 1);
+	math_state(Apid[0], xpid, Bpid[0], p_err, xpid, 2, 1);
+	if (fabsf(*i_ref) > I_PK) { *i_ref = sign(*i_ref) * I_PK; }
+}
+
 
 void ctrl_motion_hom(float v_ref, float v_msr, float *i_ref)
 {
@@ -85,11 +105,14 @@ void ctrl_motion_reset(int ctrltype_e)
 	case 3: xvpi[0] = 0.0;					break;
 	case 4: xppi[0] = 0.0;					break;
 	case 5: xshp[0] = 0.0; xshp[1] = 0.0;	break;
+//	case 6: xpd[0] = 0.0;					break;
 	default:
 		xhom[0] = 0.0;
 		xlpf[0] = 0.0; xlpf[1] = 0.0;
 		xvpi[0] = 0.0; xppi[0] = 0.0;
-		xshp[0] = 0.0; xshp[1] = 0.0;		break;
+		xshp[0] = 0.0; xshp[1] = 0.0;
+//		xpd[0] = 0.0;						
+	break;
 	}
 }
 

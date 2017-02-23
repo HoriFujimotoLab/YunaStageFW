@@ -13,7 +13,8 @@ interrupt void system_tint0(void);
 interrupt void system_cint5(void);
 
 int test = 0;
-
+float Ppos = 2.134990757136140e+01;
+float Perr = 0.0;
 
 void main(void)
 {
@@ -73,20 +74,37 @@ void system_tint0(void)
 		if (msr >= 0 && msr < nroft) {
 			//ctrl_friction_stribeck(theta_m, theta_h, &theta_mo);
 			//ctrl_friction_hyster(theta_m, theta_h);
-			ctrl_friction_lag(theta_m, theta_h, &theta_mo);
+			//ctrl_friction_lag(theta_m, theta_h, &theta_mo);
+			//if (msr == 0)	 { v_ref = +v_home; }
+			//if (pos_t < 0.0) { v_ref = -v_home; }
+			//if (pos_t > 0.5) { v_ref = +v_home; }
+			//ctrl_motion_vpi(v_ref, omega_m, &i_shp);
+			//ctrl_motion_shp(i_shp, &iq_ref);
+			//Perr = (theta_h + p_ref - theta_m);
+			//v_ref = Ppos*Perr;
+			ctrl_traject_ref(reftype_e, 1, 1, &iq_ref);
+
+			// PI-PI
+			// ctrl_motion_ppi(p_ref, theta_m, theta_h, &v_ref);
+			//ctrl_motion_vpi(v_ref, omega_m, &i_shp);
+			//ctrl_motion_shp(i_shp, &iq_ref);
+			
+			/*
+			// PID
+			ctrl_friction_gms(&p_ref, &iq_fric);
+			ctrl_motion_pid(p_ref, theta_m, theta_h, &iq_ref);
+			ctrl_motion_dob(iq_ref, omega_m, &iq_dob);
+			iq_ref += iq_dob;
+			iq_ref += iq_fric;
+			*/
 			msr++;
 		}
 		else { 
-			v_ref = 0.0; 
+			iq_ref = 0.0;
+			//v_ref = 0.0;
 			ctrl_motion_reset(3);
 			ctrl_traject_reset();
 		}
-
-		// CONTROL
-		ctrl_motion_dob(iq_ref, omega_m, &iq_dob);
-		ctrl_motion_vpi(v_ref, omega_m, &i_shp);
-		ctrl_motion_shp(i_shp, &iq_ref);
-		//iq_ref += iq_dob;
 	}
 	
 	// MULTI-INT OFF
@@ -121,11 +139,4 @@ void system_init(void)
 	timer0_enable_int();
 	system_fsm_init();
 }
-
-/*
-** NOTES
-** -----
-
-*/
-
 

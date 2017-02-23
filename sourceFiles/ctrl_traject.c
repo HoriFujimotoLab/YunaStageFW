@@ -9,13 +9,16 @@ Author:		Thomas Beauduin, University of Tokyo, 2016
 #include	"system_math.h"
 #include	"data/system_data.h"
 #include	"data/ctrl_traject_par.h"
-#include	"data/Rsawtooth.h"
+
+//#include	"data/Rsawtooth.h"
+//#include	"data/Rsawtooth2.h"
+#include	"data/Rdrift.h"
 
 // MODULE VAR
 // Global: reference generation
 float Aref = 0.0, Fref = 0.0;
 enum ref reftype_e = REF_OFF;
-int nroft = NROFS;
+int nroft = 0.0;
 // Local:
 int ref = 0;
 double t = 0.0;
@@ -33,9 +36,11 @@ void ctrl_traject_ref(int reftype_e, float Aref, float Fref, float *x_ref)
 	case 4: if (t < 0.5) { *x_ref = 0.0; }
 			else { *x_ref = Aref; }
 			t += (TS*1.0e-6);						break;
+		///*
 	case 5: *x_ref = Aref*refvec[ref];
 			if (ref < (NROFS - 1))	{ ref++; }
 			else					{ ref = 0; }	break;
+		//	*/
 	}
 }
 
