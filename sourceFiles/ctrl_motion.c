@@ -57,8 +57,8 @@ void ctrl_motion_pd(float p_ref, float p_msr, float p_off, float *i_ref)
 	math_state(Apd[0], xpd, Bpd[0], p_err, xpd, 1, 1);
 	if (fabsf(*i_ref) > I_PK) { *i_ref = sign(*i_ref) * I_PK; }
 }
-*/
 
+*/
 void ctrl_motion_pid(float p_ref, float p_msr, float p_off, float *i_ref)
 {
 	float p_err[1] = { 0.0 };

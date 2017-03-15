@@ -14,8 +14,8 @@ Notes:		include controllers in friction functions
 #include	"data/system_data.h"
 
 //#include	"data/ctrl_stribeck_ref.h"
-//#include	"data/Rgmsfric_d.h"
-//#include	"data/Rsawtooth2.h"
+#include	"data/Rgmsfric_d.h"
+#include	"data/Rsawtooth2.h"
 
 // MODULE VAR
 // Global: reference generation
@@ -142,7 +142,7 @@ void ctrl_friction_drift(float *iq_ref)
 	// trajectory module is only for poly/bezier/...
 }
 
-/*
+
 void ctrl_friction_gms(float *p_ref, float *iq_fric)
 {
 	*iq_fric = iqvec[rf];
@@ -150,7 +150,7 @@ void ctrl_friction_gms(float *p_ref, float *iq_fric)
 	if (rf < (NROFS - 1)) { rf++; }
 	else { rf = 0; }
 }
-*/
+
 
 
 void ctrl_friction_vlpf(float u_org, float *u_lpf)
